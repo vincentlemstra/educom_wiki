@@ -1,0 +1,95 @@
+# 1.1: Models
+-------------
+Inventarisatie GET
+
+WF1.0
+x
+
+WF1.1 - home
+- haal ingelogde auteur naam op
+
+WF2.0 + 2.1
+- haal alle mogelijke auteur voornamen, tussenvoegselels, achternamen + ID op 
+
+WF3.0
+x
+
+WF3.1
+- haal auteur voornamen, tussenvoegselels, achternamen, email, tel. nr + ID op 
+
+WF4.0
+- haal van auteur op:
+    - ID
+    - voornaam
+    - tussenvoegsel
+    - achternaam
+    - email
+    - wachtwoord
+op basis van email
+- valideer login gegevens
+
+WF5.0
+- controleer email adres met bestaande email adressen
+
+WF6 + WF6.1 - zoek
+- haal alle mogelijke tags titels + ID op
+- haal alle mogelijke auteur voornamen, tussenvoegselels, achternamen + ID op
+
+WF7.0 + 7.1
+x 
+
+WF8.0
+x
+
+WF9.0 + 9.1
+- haal van auteur op:
+    - ID
+    - voornaam
+    - tussenvoegsel
+    - achternaam
+    - beschrijving
+- haal artikelen op, op basis van auteru ID:
+    - ID
+    - naam
+
+
+WF10 + 10.1 - resultaten
+- haal van artikelen op:
+    - artikel naam
+    - datum laatst gewijzigd
+    - artikel ID
+    - gemiddelde waardering  
+    - Met bijbehorende auteur voornaam, tussenvoegsel, achternaam
+    - Met bijbehorende tags
+Op basis van geselecteerde tags en auteurs.
+
+WF11.0 + 11.1 + 11.2
+- haal van artikel op:
+    - ID
+    - artikel titel
+    - afbeelding
+    - auteur ID, met bijbehorende voornaam, tussenvoegsel, achternaam
+    - tag ID, met bijbehorende tag titels
+    - datum laatst gewijzigd
+    - gemiddelde waardering
+    - uitleg
+    - code-blok
+
+WF12
+- haal bestaande tags op
+
+WF13
+- haal van artikel op:
+    - ID
+    - artikel titel
+    - afbeelding
+    - tag ID, met bijbehorende tag titels
+    - uitleg
+    - code-blok
+    - auteur ID
+
+
+
+
+
+

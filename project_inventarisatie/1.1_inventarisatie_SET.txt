@@ -1,0 +1,46 @@
+# 1.1: Models
+-------------
+Inventarisatie SET
+
+WF5.0
+- auteur gegevens toevoegen
+    - voornaam
+    - tussenvoegsel
+    - achternaam
+    - geboortedatum
+    - email
+    - wachtwoord
+
+WF9.1
+- artikel verwijderen (non-actief)
+
+WF11.2
+- artikel verwijderen (non-actief)
+- waardering toevoegen aan artikel
+
+WF12.0
+- artikel gegevens toevoegen
+    - ID
+    - auteur ID
+    - artikel titel
+    - afbeelding
+    - tag ID, met bijbehorende tag titels
+    - uitleg
+    - code-blok
+    - creatie datum
+    - datum laast gewijzigd
+- tag gegevens toevoegen
+    - ID
+    - titel
+
+WF13
+- artikel verwijderen (non-actief)
+- update nieuwe waardes van artikel
+    - ID
+    - artikel titel
+    - afbeelding
+    - tag ID, met bijbehorende tag titels
+    - uitleg
+    - code-blok
+    - datum laast gewijzigd
+    - auteur ID 

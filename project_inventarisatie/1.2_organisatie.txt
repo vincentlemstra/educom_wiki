@@ -1,0 +1,27 @@
+# 1.2: Models
+-------------
+Organistatie (parameters en return types)
+
+GETTERS:
+Author:
+- getAllAuthors() : array | false
+- getAllAuthorNames() : array | false
+- getAuteurById(int $id) : array | false
+- getAuteurByEmail(string $email) : array | false
+
+Tag:
+- getAllTags() : array | false
+
+Article:
+- getArticleById(int $id) : array | false
+- getArticleNamesByAuthorId(int $id) : array | false
+- getArticlesBySearch(array $tag_id, array $auteur_id) : array | false
+- getArticleByIdForEdit(int $id) : array | false
+
+SETTERS:
+- createAuthor(array $author) : int | false
+- createArticle(array $article) : int | false
+- createTag(string $article) : | false
+- deleteArticleById(int $id) : int | false 
+- updateArticleById(array $article) : int | false 
+- rateArticleById(int $id) : int | false 
