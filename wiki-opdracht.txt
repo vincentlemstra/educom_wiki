@@ -1,0 +1,24 @@
+Maak een WIKI-site voor software-ontwikkelaars waarin deze handige stukjes code en uitleg kunnen bekijken , doorzoeken en uitbreiden.
+
+De website krijgt om te beginnen de volgende functionaliteit:
+
+Een WIKI-artikel heeft
+ een titel en uitleg, 
+ optioneel een code-blok en een afbeelding (jpg of png),
+en kan numeriek worden gekoppeld aan meerdere keywords/tags (PHP, JAVASCRIPT, ect).
+
+Buiten de default pagina's HOME, ABOUT (met submenu auteurs) en CONTACT bekijken kan iedere gebruiker
+de WIKI doorzoeken op basis van TAGS/AUTEURS selectie.
+Resultaten worden gesorteerd op datum laatste wijziging.
+Optioneel kan er gesorteerd worden op waardering.
+
+Iedere ingelogde gebruiker kan ieder WIKI artikel van andere auteurs waarderen op een schaal van 1 tot 5.
+Een ingelogde gebruiker kan een WIKI-artikel toevoegen, en zijn eigen artikelen bewerken en verwijderen.
+
+Stappen :
+- maak de wire frames voor de verschillende pagina's die in deze web-applicatie worden getoond.
+- maak het datamodel en de MySQL-database.
+- maak de flowchart en het object-model (volgens het MVC principe, waarbij hier de V(iew) wordt vervangen door P(resentatie).
+- schrijf en test de code.
+
+Laat iedere stap eerst controleren door de docent voordat de volgende stap wordt gezet.	
