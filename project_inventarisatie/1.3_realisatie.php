@@ -1,7 +1,7 @@
 <?php
 # 1.3: Models
 
-interface iAuteurModel
+interface iAuthorModel
 {
     public function getAllAuthors() : array | false
     public function getAllAuthorNames() : array | false
