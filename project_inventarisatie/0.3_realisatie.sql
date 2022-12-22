@@ -23,7 +23,7 @@ CREATE TABLE article (
   date_create DATETIME,
 
   PRIMARY KEY (id),
-  FOREIGN KEY (author_id) REFERENCES author(id),
+  FOREIGN KEY (author_id) REFERENCES author(id)
 );
 
 CREATE TABLE tag (
