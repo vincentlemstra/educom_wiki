@@ -40,13 +40,17 @@ class SiteDAO
     {
         return[
                 'Article1' => [
+                        'author' => 'Yoeri',
+                        'beoordeling' => 5,
                         'title' => 'Title 1',       
                         'uitleg'=> 'Javascript wordt gebruikt om clientside elementen te manipuleren',
                         'tag' =>'Javascript',
                         'date_modified' => '20-12-2022',
                         'codeblock' => ''
                 ],
-                'Article' => [
+                'Article2' => [
+                        'author' => 'Koen',
+                        'beoordeling' => 2,
                         'title' => 'Title 2',       
                         'uitleg'=> 'PHP is een server side language',
                         'tag' =>'PHP',

@@ -17,9 +17,9 @@ protected array $items; //protected--> kan overschreven worden door extends
 	
 	protected function showItems()
 	{
-		foreach($this->items as $key => $value)
+		foreach($this->items as $item)
 		{
-			$this->showItem($key, $value);
+			$this->showItem($item);
 		}
 	}
 	abstract function openList();
