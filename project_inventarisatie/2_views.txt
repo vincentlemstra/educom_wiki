@@ -1,0 +1,234 @@
+# 2: Views
+---
+Inventarisatie.txt (in los bestand)
+WF1.0
+x- menu: balk met aanklikbare pagina links
+x- text blok: welkom bericht + informatie over de website
+x- footer: tekst
+
+WF1.1
+x- menu: balk met aanklikbare pagina links
+x- text blok: welkom auteur voornaam + informatie over de website
+x- footer: tekst
+
+WF2.0 + WF2.1
+x- menu: balk met aanklikbare pagina links
+x- Tekstblok met About tekst
+x- opsomming van Authors, met hyperlinks naar Authorpagina
+x- footer: tekst
+
+WF 3.0
+x- menu: balk met aanklikbare pagina links
+x- Pagina titel (tekstblok)
+x- Formulier: formuliervelden contact tonen
+x- footer: tekst
+
+WF 4.0 
+x- menu: balk met aanklikbare pagina links
+x- Pagina titel
+x- Formulier: formuliervelden inlog tonen
+x- footer: tekst
+
+WF 5.0 
+x- menu: balk met aanklikbare pagina links
+x- Pagina titel
+x- Formulier: formuliervelden registratie tonen
+x- footer: tekst
+
+WF 6.0
+x- menu: balk met aanklikbare pagina links
+x- tag selecter
+x- auteur selecter
+x- zoekknop: submit button 'zoeken'
+x- footer: tekst
+
+WF 7.0
+x- menu: balk met aanklikbare pagina links
+x- tekstblok: Bedankt voor uw bericht!
+x- footer: tekst
+
+WF 8.0
+x- menu: balk met aanklikbare pagina links
+x- tekstblok: Bedankt voor uw aanmelding!
+x- footer: tekst
+
+WF 9.0
+x- menu: balk met aanklikbare pagina links
+x- tekstblok: beschrijving Author
+- Lijst: opsomming van Artikelen van deze author, met hyperlinks naar artikel
+x- footer: tekst
+
+WF9.1 (extend op 9.0)
+x- menu: balk met aanklikbare pagina links
+x- tekstblok: beschrijving Author
+- knop: met voeg artikel toe
+- Lijst: opsomming van Artikelen van deze author, met hyperlinks naar artikel
+- -->	knop: per artikel een edit optie
+- -->	Knop: per artikel een verwijder optie
+x- footer: tekst
+
+WF 10 + 10.1
+x- menu: balk met aanklikbare pagina links
+- Bij resultaat: Een Lijst: artikelnaam, authornaam, tags, datum laatste wijziging, waardering
+- Bij geen resultaat, Tekstblok: deze zoekresultaten geeft geen resultaten
+x- footer: tekst
+
+WF 11.0
+x- menu: balk met aanklikbare pagina links
+- Artikel element tonen:
+-	afbeelding
+-	titel
+-	tags
+- 	datum laatst gewijzigd
+-	auteur naam
+-	waarding
+-	uitleg
+-	codeblok
+x- footer: tekst
+
+WF 11.1 idem als 11.0 plus (extend)
+- Artikel Delete (knop)
+- Artikel Edit (knop)
+
+WF 11.2 idem als 11.0
+- clickable element om artikel te waarderen
+
+WF 12 
+x- menu: balk met aanklikbare pagina links
+- Formulier: Artikel formulier velden tonen, inclusief tag toevoeging (Ajax-based)
+x- footer: tekst
+
+WF13 idem als 12
+- formulier is gevuld met waarden (uit db) bestaand record
+
+WF14
+x- menu: balk met aanklikbare pagina links
+- Formulier: auteur formuliervelden tonen
+x- footer: tekst
+
+------------------------------------------------------------------------
+Organistatie (constructor defineren)
+
+View Menu:
+Input: array menu_items ['page'=>'title']
+Output: balk met aanklikbare pagina links
+
+View footer:
+input: footer content/tekst
+output: footer met content/tekst
+
+View TekstBlok:
+input: string bodytekst
+output: blok met tekst voor desbetreffende page
+
+View maincontent WF2.0:
+
+
+
+///INTERFACE///
+Realisatie (public function show)
+interface iView 
+{
+    public function show() : void;
+}
+
+///CLASS....///
+class MenuView extends BaseList implements iView 
+{
+	public function openList()
+	{
+		echo "<NAV><UL>";
+	}
+	
+	public function showItems()
+	{
+		foreach($this->items as $key => $value)
+		{
+			$this->showItem($key, $value);
+		}
+	}
+//overide baselist class due to key loss ... to be checked
+//add Active page check to darken this menu item.. 
+	public function showItem(string $key, string $value /*,$active*/)
+	{
+		//to do active page test --> no hyperlink
+		echo '<LI><A href="index.php?page="'.$key.'>'.$value.'</A></LI>';
+	}
+	
+	public function closeList()
+	{
+		echo "	</UL></NAV>";
+	}
+}
+------
+
+class TextBlockView implements iView
+{
+   protected string $text_block
+   
+    public function __construct(string $text_block, string $wrapper)
+    {
+       $this->text_block= $text_block;
+       $this->wrapper= $wrapper;
+    }
+
+    public function show() : void
+    {
+        echo '<'.$this->wrapper.'>'.$this->text_block.'</'.$this->wrapper.'>';
+    }
+}
+
+class FooterView extends TextBlockView
+{   
+    public function __construct(string $footer_content) 
+    {
+       parent::__construct($footer_content, 'footer');
+    }
+}
+
+class ArticleListView extends BaseList 
+{
+	public function openList()
+	{
+		echo "<TABLE><TH>Sorteer op naam </TH><TH>Sorteer op Auteur</TH><TH>Sorteer op Tag</TH><TH>Sorteer op datum</TH><TH>Sorteer op waardering</TH>";
+	}
+
+	public function showItem(array $item)
+	{
+		echo '<TR><TD><a href="index.php/articles/'.$item['title'].'">'.$item['title'].'</a>
+				</TD><TD>'.$item['author'].'</TD>
+				<TD>'.$item['tag'].'</TD>
+				<TD>'.$item['date_modified'].'</TD>
+				<TD>'.$item['beoordeling'].'</TD>
+				</TR>';
+	}
+	
+	public function closeList()
+	{
+		echo "</TABLE>";
+	}
+}
+
+class AuthorListView extends Baselist
+{
+	public function openList()
+	{
+		echo "<DIV><UL>";
+	}
+
+	public function showItem(array $item)
+	{
+		echo '<LI><A href="index.php/authors/'.$item['name'].'" id="'.$item['id'].'">'.$item['name'].'</A></LI>';
+	}
+	
+	public function closeList()
+	{
+		echo "</UL></DIV>";
+	}
+}
+
+
+
+
+
+
