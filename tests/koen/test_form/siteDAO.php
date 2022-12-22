@@ -230,7 +230,51 @@ class SiteDAO
                             'MYSQL'  => 'MYSQL'
                         ]
                     ]
-                ];    
+                ];
+            case 'article':
+            //case 'nieuw_item':
+                return [
+                    'title' => [
+                        'type' => 'text',       
+                        'label'=> 'Title',
+                        'placeholder' => 'Vul hier het artikel naam in',
+                    ],
+                    'tag' => [
+                        'type' => 'select multiple',
+                        'label'=> 'selecteer Tag(s)',
+                        'options' => [
+                            'Javascript' => 'Javascript',
+                            'PHP' => 'PHP',
+                            'Ajax' => 'Ajax',
+                            'CSS' => 'CSS',
+                            ]
+                        ],
+                    'new tag' => [
+                         'type' => 'text',
+                         'label' =>'Nieuwe tag',
+                         'placeholder' => 'Voeg nieuwe tag toe'
+                    ],
+                    'add' => [
+                        'type' => 'submit',
+                        'label' => '',
+                        'value' => 'toevoegen',
+                    ],         
+                    'image upload' => [
+                        'type' => 'file',   
+                        'label'=> 'image',
+                        'placeholder' => 'huidige afbeelding overschrijven',
+                    ],
+                    'text' => [
+                        'type' => 'textarea',
+                        'label'=> 'artikel tekst',
+                        'placeholder' => 'Vul hier de artikel met tekst',
+                    ],
+                    'codeblock' => [
+                        'type' => 'textarea',
+                        'label'=> 'Code-block',
+                        'placeholder' => 'Vul hier het codeblok',
+                    ],                    
+                ];     
             default :
                 // Show Error!!!
                 return [];

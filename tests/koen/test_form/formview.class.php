@@ -39,6 +39,12 @@ class FormElement extends BaseList
                 case "select" :
                     $this->showSelect($name, $info,$current_value);
                     break;
+                case "select multiple" :
+                    $this->showSelectmultiple($name, $info,$current_value);
+                    break;
+                case "submit" :
+                    $this->showSubmit($name, $info);
+                    break;
                 default :   
                     $this->showInputField($name, $info, $current_value);
                     break;
@@ -89,6 +95,27 @@ class FormElement extends BaseList
         }
         echo '      </select>'.PHP_EOL;
     }
+//==============================================================================
+    protected function showSelectMultiple($fieldname, $fieldinfo, $current_value)
+    {        
+        echo '      <select name="'.$fieldname.' "multiple>'.PHP_EOL;
+        $options = $this->getValueFromArray('options',$fieldinfo,[]);
+        if ($options)
+        {
+            foreach ($options as $key => $value)
+            {
+                $selected = $current_value==$value ? "selected" : "";
+                echo '<option value="'.$value.'" '.$selected.'>'.$key.'</option>'.PHP_EOL;
+            }    
+        }
+        echo '      </select>'.PHP_EOL;
+    }
+//==============================================================================
+    protected function showSubmit(string $fieldname, array $fieldinfo)
+    {
+        echo ' <button type="'.$fieldinfo['type'].'"name="'.$fieldname.
+                '"value="">'.$fieldinfo['value'].'</button>';
+    }   
 //==============================================================================
     protected function showInputField(string $fieldname, array $fieldinfo, string $current_value)
     {
