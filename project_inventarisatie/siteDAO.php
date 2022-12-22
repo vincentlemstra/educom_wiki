@@ -26,10 +26,22 @@ class SiteDAO
     public function getAuthors() : array
     {
         return[
-                'Jordi' => 'Jordi',
-                'Koen' => 'Koen',
-                'Yoeri' => 'Yoeri',
-                'Vincent' => 'Vincent'
+                'Jordi' => [
+                    'id' => 0,
+                    'name' => 'Jordi',
+                ],
+                'Koen' =>  [
+                    'id' => 1,
+                    'name' => 'Koen',
+                ],
+                'Yoeri' => [
+                    'id' => 2,
+                    'name' => 'Yoeri',
+                ],
+                'Vincent' => [
+                    'id' => 4,
+                    'name' => 'Vincent',
+                ]
             ];
 
     } 
@@ -40,13 +52,19 @@ class SiteDAO
     {
         return[
                 'Article1' => [
+                        'id' => 0,
+                        'author' => 'Yoeri',
+                        'beoordeling' => 5,
                         'title' => 'Title 1',       
                         'uitleg'=> 'Javascript wordt gebruikt om clientside elementen te manipuleren',
                         'tag' =>'Javascript',
                         'date_modified' => '20-12-2022',
                         'codeblock' => ''
                 ],
-                'Article' => [
+                'Article2' => [
+                        'id' => 1,
+                        'author' => 'Koen',
+                        'beoordeling' => 2,
                         'title' => 'Title 2',       
                         'uitleg'=> 'PHP is een server side language',
                         'tag' =>'PHP',
