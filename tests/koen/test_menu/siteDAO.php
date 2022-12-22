@@ -26,10 +26,22 @@ class SiteDAO
     public function getAuthors() : array
     {
         return[
-                'Jordi' => 'Jordi',
-                'Koen' => 'Koen',
-                'Yoeri' => 'Yoeri',
-                'Vincent' => 'Vincent'
+                'Jordi' => [
+                    'id' => 0,
+                    'name' => 'Jordi',
+                ],
+                'Koen' =>  [
+                    'id' => 1,
+                    'name' => 'Koen',
+                ],
+                'Yoeri' => [
+                    'id' => 2,
+                    'name' => 'Yoeri',
+                ],
+                'Vincent' => [
+                    'id' => 4,
+                    'name' => 'Vincent',
+                ]
             ];
 
     } 
@@ -40,6 +52,7 @@ class SiteDAO
     {
         return[
                 'Article1' => [
+                        'id' => 0,
                         'author' => 'Yoeri',
                         'beoordeling' => 5,
                         'title' => 'Title 1',       
@@ -49,6 +62,7 @@ class SiteDAO
                         'codeblock' => ''
                 ],
                 'Article2' => [
+                        'id' => 1,
                         'author' => 'Koen',
                         'beoordeling' => 2,
                         'title' => 'Title 2',       
