@@ -15,7 +15,7 @@ class SiteDAO
                 'registratie' => 'registratie',
             ];
 
-        //when menu is in database we could use below...     
+    //when menu is in database we could use below...     
         //start function to get menu items from database
         //$sql = "SELECT * FROM MENU ORDER BY orderby";
         //return $this->_crud->selectMore("SELECT * FROM MENU ORDER BY orderby");
@@ -52,6 +52,7 @@ class SiteDAO
                         'tag' =>'PHP',
                         'date_modified' => '19-12-2022',
                         'codeblock' => '<?php echo "hello world"'
+            ]
         ];
 
     }  
@@ -79,7 +80,8 @@ class SiteDAO
             case 'home':
                 return '<h1>Welkom!</h1><p>Welkom op de website van de beste studenten van Educom, '
                 . 'we gaan u vermaken met interessante artikelen over software/web ontwikkeling.</p>'
-                //. '<img src="'.WEBIMG_FOLDER.'home.jpg" />';    
+                //. '<img src="'.WEBIMG_FOLDER.'home.jpg" />'; 
+                ;   
             case 'login': 
                 return '<h1>Inloggen</h1><p>Heb je al een account en wil je een artikel schrijven? '
                 . ' Vul dan je email-adres en wachtwoord in en druk op [Inloggen]</p>';
