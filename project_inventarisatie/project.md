@@ -14,24 +14,24 @@
 ---
 ## Overview
 ### Database
-- [ ] 1a. Inventarisatie
-- [ ] 1b. Organisatie
-- [ ] 1c. Realisatie
+- [x] 1a. Inventarisatie
+- [x] 1b. Organisatie
+- [x] 1c. Realisatie
 
 ### Model GET
-- [ ] 1a. Inventarisatie
-- [ ] 1b. Organisatie
-- [ ] 1c. Realisatie
+- [x] 1a. Inventarisatie
+- [x] 1b. Organisatie
+- [x] 1c. Realisatie
   
 ### Model SET
-- [ ] 1a. Inventarisatie
-- [ ] 1b. Organisatie
-- [ ] 1c. Realisatie
+- [x] 1a. Inventarisatie
+- [x] 1b. Organisatie
+- [x] 1c. Realisatie
 
 ### View
-- [ ] 1a. Inventarisatie
-- [ ] 1b. Organisatie
-- [ ] 1c. Realisatie
+- [x] 1a. Inventarisatie
+- [x] 1b. Organisatie
+- [x] 1c. Realisatie
 
 ### Controller
 - [ ] 1a. Inventarisatie

@@ -10,7 +10,7 @@ INSERT INTO `article` (`id`, `author_id`, `title`, `img`, `explanation`, `code_b
   (NULL, '2', 'PHP while loop', NULL, 'The while loop - Loops through a block of code as long as the specified condition is true.', 'while (condition is true) {code to be executed;}', current_timestamp(), current_timestamp())
 
 -- tags:
-INSERT INTO `tag` (`id`, `title`) VALUES 
+INSERT INTO `tag` (`id`, `tagname`) VALUES 
   (NULL, 'PHP'), 
   (NULL, 'For Loop'), 
   (NULL, 'While loop')

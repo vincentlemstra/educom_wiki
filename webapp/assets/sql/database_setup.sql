@@ -28,7 +28,7 @@ CREATE TABLE article (
 
 CREATE TABLE tag (
   id INT(11) AUTO_INCREMENT,
-  title VARCHAR(255) NOT NULL,
+  tagname VARCHAR(255) NOT NULL,
     
   PRIMARY KEY(id)
 );

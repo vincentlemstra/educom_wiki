@@ -1,5 +1,5 @@
 <?php
-class BaseModel {
+class BaseDAO {
     // --- PROPERTIES ---
     protected $crud;
 

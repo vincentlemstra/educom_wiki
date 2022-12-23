@@ -38,6 +38,14 @@ class Crud {
         return $stmt->fetchAll();
     }
 
+    public function selectOne(string $sql, array $params=[], bool $as_object=false)
+    {
+        if ($this->_execute($sql,$params)) {	
+            return $this->stmt->fetch($as_object ? \PDO::FETCH_OBJ : \PDO::FETCH_ASSOC);
+        }				
+        return false;
+    }
+
     public function update(string $sql, array $var) : int {
         // returns int: affected rows | bool: false
         $stmt = $this->conn->prepare($sql);
