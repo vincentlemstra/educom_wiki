@@ -1,20 +1,27 @@
 <?php
 require_once "iarticle.interface.php";
-class ArticleModel // implements iArticleModel
+require_once "base.model.php";
+
+class ArticleModel extends BaseModel // implements iArticleModel
 {
     public function getArticleById(int $id) : array 
     {
-        // dummy data
-        if ($id == 0) {
-            return false;
-        } 
+        $sql = "SELECT * FROM article WHERE id = ?";
+        $var = [$id];
+        return $this->crud->read($sql, $var);
+    }
 
-        return [
-            'author_id'     =>  '1',
-            'title'         =>  'PHP for Loop',
-            'img'           =>  'PATH TO IMAGE',
-            'explanation'   =>  'The for loop - Loops through a block of code a specified number of times.',
-            'code_block'    =>  'CODE BLOCK',          
-        ];
+    // todo : wat was het verschil bij ForEdit?
+    public function getArticleByIdForEdit(int $id) : array
+    {
+        $sql = "SELECT * FROM article WHERE id = ?";
+        $var = [$id];
+        return $this->crud->read($sql, $var);
+    }
+
+    public function getArticlesBySearch(array $tag_id, array $auteur_id) : array
+    {
+        
     }
 }
+

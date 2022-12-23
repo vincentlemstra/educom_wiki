@@ -8,7 +8,7 @@ class Crud {
         $servername = "localhost";
         $username = "root";
         $password = "MAMPsetup0191";
-        $dbName = "vincent_database";
+        $dbName = "educom_wiki";
 
         $dsn = 'mysql:host=' . $servername . ';dbname=' . $dbName;
         $this->conn = new PDO($dsn, $username, $password);
