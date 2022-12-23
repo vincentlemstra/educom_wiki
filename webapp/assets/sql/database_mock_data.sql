@@ -15,9 +15,9 @@ INSERT INTO `tag` (`id`, `title`) VALUES
   (NULL, 'For Loop'), 
   (NULL, 'While loop')
 
--- article_tags
+-- article_tags -
 INSERT INTO `article_tag` (`article_id`, `tag_id`) VALUES 
   ('2', '1'), 
   ('2', '2'),
-  ('3', '1'), 
-  ('3', '3')
+  ('1', '1'), 
+  ('1', '3')
