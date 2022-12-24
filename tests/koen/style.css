@@ -1,0 +1,53 @@
+body{
+    width : 90%;
+    margin : 0 auto;
+    text-align : center;
+    font-family: Georgia, serif;
+}
+
+nav ul{  
+    padding:0;  
+    background:black;  
+    font-family:Arial, sans serif;  
+    font-size:18px;  
+    text-transform:uppercase;
+}
+
+nav li{  
+    display:inline-block;
+}
+
+nav a{  
+    display:block;  
+    padding:10px;  
+    color:white;  
+    text-decoration:none;
+    font-family: Georgia, serif;
+}
+
+footer {
+    width : 100%;
+    display:block;  
+    padding:10px;  
+    color:white;  
+    text-decoration:none;
+    padding:0;  
+    background:black;  
+    font-family:Arial, sans serif;  
+    font-size:18px;  
+    text-transform:uppercase;
+    display:inline-block;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 100px;
+  }
+
+.bodycontent {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 8;
+  }
