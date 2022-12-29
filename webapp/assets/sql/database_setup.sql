@@ -45,7 +45,7 @@ CREATE TABLE article_tag (
 CREATE TABLE rating (
   author_id INT(11) NOT NULL,
   article_id INT(11) NOT NULL,
-  score INT(1) NOT NULL,
+  rating INT(1) NOT NULL,
     
   CONSTRAINT rating_pk PRIMARY KEY (author_id, article_id),
   FOREIGN KEY (author_id) REFERENCES author(id),
