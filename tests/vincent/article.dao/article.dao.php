@@ -13,7 +13,7 @@ class ArticleDAO extends BaseDAO // implements iArticleDAO
 
     public function getArticleByIdForEdit(int $id) : array
     {
-        // todo       
+        // todo     
     }
 
     public function getArticlesBySearch(array $author_id, array $tag_id)
@@ -64,7 +64,9 @@ class ArticleDAO extends BaseDAO // implements iArticleDAO
 
     public function rateArticleById(int $article_id, int $author_id, int $rating) : float
     {
-        // todo
+        $sql = "INSERT INTO rating (user_id, product_id, rating) VALUES (?, ?, ?)";
+        $var = [$author_id, $article_id, $rating];
+        return $this->crud->create($sql, $var);
     }
 
     public function createArticle(int $author_id, string $title, mixed $img, string $explanation, string $code_block, string $date_create, array $tags) : int
@@ -72,18 +74,48 @@ class ArticleDAO extends BaseDAO // implements iArticleDAO
         $sql = "INSERT INTO article (author_id, title, img, explanation, code_block, date_create) VALUES (?, ?, ?, ?, ?, ?)";
         $var = [$author_id, $title, $img, $explanation, $code_block, $date_create];
         $article_id = $this->crud->create($sql, $var);
-        setArticleTags($article_id, $tags);
+
+        $this->setArticleTags($article_id, $tags);
+
+        return $article_id;
     }
 
-    public function setArticleTags(int $article_id, array $tags) : int
+    public function updateArticleById(int $article_id, string $title, mixed $img, string $explanation, string $code_block, array $tags) : int
     {
-        $sql = "INSERT INTO article_tag (article_id, tag_id) VALUES (?, ?)";
-        $var = [$article_id, $tags];
+        $sql = "UPDATE article SET title = ?, img = ?, explanation = ?, code_block = ?, date_edit =  CURRENT_TIMESTAMP() WHERE id = ?";
+        $var = [$title, $img, $explanation, $code_block, $article_id];
+        $result = $this->crud->update($sql, $var);
 
-        // todo loop thru each tag and run the query so that it creates multiple entries
+        $this->deleteArticleTags($article_id);
+        $this->setArticleTags($article_id, $tags);
+
+        return $result;
     }
 
+    public function deleteArticleById(int $id) : int
+    {
+        $sql = "DELETE FROM article WHERE id=?";
+        $var = [$id];
+        return $this->crud->delete($sql, $var);
+    }
 
-      
+    private function setArticleTags(int $article_id, array $tags) : array 
+    {
+        $affected_rows = [];
+        for ($i = 0; $i<count($tags); $i++){
+            $sql = "INSERT INTO article_tag (article_id, tag_id) VALUES (?, ?)";
+            $var = [$article_id, $tags[$i]];
+            $affected_rows[] = $this->crud->create($sql, $var);
+        }
+        return $affected_rows;
+        // ! table article_tag does not have a ID column -> return value = 0
+    }
+
+    private function deleteArticleTags(int $article_id) : int
+    {
+        $sql = "DELETE FROM article_tag WHERE article_id=?";
+        $var = [$article_id];
+        return $this->crud->delete($sql, $var);
+    }
 }
 

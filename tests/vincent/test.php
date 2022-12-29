@@ -34,10 +34,24 @@ $articleModel = new ArticleDAO($crud);
 
 // date_default_timezone_set('Europe/Amsterdam');
 // $date = date('Y-m-d H:i:s');
-// $tags = [1, 6];
-// $data = $articleModel->createArticle(3, 'PHP do while loop', NULL, 'The do...while loop - Loops through a block of code once, and then repeats the loop as long as the specified condition is true.', 'do { code to be executed; } while (condition is true);', $date, $tags);
+// $tags = [1, 2];
+// $data = $articleModel->createArticle(3, 'test', NULL, 'test', 'test', $date, $tags);
+// var_dump($data);
+// echo '<br><br>';    
+
+$tags = [4, 5, 6];
+$data = $articleModel->updateArticleById(29, 'OVERRIDE 3 title', NULL, 'OVERRIDE 3 explanation', 'OVERRIDE 3 code_block', $tags);
+var_dump($data);
+echo '<br><br>';
+
+// $data = $articleModel->deleteArticleById(9);
 // var_dump($data);
 // echo '<br><br>';
 
+// $data = $articleModel->setArticleTags(29, [3, 4]);
+// var_dump($data);
+// echo '<br><br>';
 
-
+// $data = $articleModel->deleteArticleTags(29);
+// var_dump($data);
+// echo '<br><br>';
