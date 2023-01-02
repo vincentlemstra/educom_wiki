@@ -14,7 +14,7 @@ interface iAuthorModel
         //=======================================
         // used in WF: ???
         // input: none
-        // output: all author names, concatenated to first + preposition + last
+        // output: all author names, concatenated to first + preposition + last, author id (to link to personal page/articles)?
         //=======================================
         
     public function getAuthorById(int $id) : array | false
