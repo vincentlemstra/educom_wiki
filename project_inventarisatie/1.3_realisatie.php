@@ -4,10 +4,40 @@
 interface iAuthorModel
 {
     public function getAllAuthors() : array | false
+        //=======================================
+        // used in WF: ???
+        // input: none
+        // output: ???
+        //=======================================
+        
     public function getAllAuthorNames() : array | false
+        //=======================================
+        // used in WF: ???
+        // input: none
+        // output: all author names, concatenated to first + preposition + last
+        //=======================================
+        
     public function getAuthorById(int $id) : array | false
+        //=======================================
+        // used in WF: ???
+        // input: author id
+        // output: ???
+        //=======================================
+        
     public function getAuthorByEmail(string $email) : array | false
+        //=======================================
+        // used in WF: ???
+        // input: author email
+        // output: ???
+        //=======================================
+        
     public function createAuthor(array $author) : int | false
+        //=======================================
+        // used in WF: ???
+        // input: author firstname, lastname, email, date of birth, password, password_repeat
+        // validate: author firstname, lastname, email, password, passwod_repeat
+        // output: save validated user details in separate table to be approved for access by admin
+        //=======================================
 }
 
 interface iArticleModel 
