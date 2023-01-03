@@ -12,16 +12,17 @@ interface iAuthorModel
         
     public function getAllAuthorNames() : array | false
         //=======================================
-        // used in WF: ???
-        // input: none
-        // output: all author names, concatenated to first + preposition + last, author id (to link to personal page/articles)?
+        // WF: 2.0, 2.1, 6.0 || input: - || output: author firstname, author preposition, author lastname (concatenated), author id
         //=======================================
         
     public function getAuthorById(int $id) : array | false
         //=======================================
-        // used in WF: ???
-        // input: author id
-        // output: ???
+        // WF: 1.0 || input: author id || output: author firstname
+        // WF: 9.0, 9.1 || input: author id || output: author firstname, author preposition, author lastname, author description
+        // WF: 10.0 || input: author id || output: author firstname, author preposition, author lastname
+        // WF: 11.0, 11.1 || input: author id || output: author firstname, author preposition, author lastname
+        // WF: 14.0 || input: author id || output: author firstname, author preposition, author lastname, author birthdate, author email, 
+        //      author telephonenumber, author description, author picture
         //=======================================
         
     public function getAuthorByEmail(string $email) : array | false
@@ -33,10 +34,10 @@ interface iAuthorModel
         
     public function createAuthor(array $author) : int | false
         //=======================================
-        // used in WF: ???
-        // input: author firstname, lastname, email, date of birth, password, password_repeat
-        // validate: author firstname, lastname, email, password, passwod_repeat
-        // output: save validated user details in separate table to be approved for access by admin
+        // used in WF: 5.0 || input: author firstname, lastname, email, date of birth, password, password_repeat 
+        // action: validate author firstname, lastname, email, password, passwod_repeat
+        //          save validated user details in separate table to be approved for access by admin
+        // output: id of last saved record
         //=======================================
 }
 
