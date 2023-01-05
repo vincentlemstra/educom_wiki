@@ -51,3 +51,53 @@ footer {
     grid-row-start: 1;
     grid-row-end: 8;
   }
+
+form {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-gap: 16px;
+    max-width: 600px;
+    padding: 1em;
+    margin: 2rem auto 0 auto;
+}
+
+label {
+    grid-column: 1 / 2;
+    padding: 0.5em 0.5em 0.5em 0;
+
+}
+
+input,
+button {
+    grid-column: 2 / 3;
+}
+
+input {
+    padding: 0.7em;
+    margin-bottom: 0.5rem;
+  }
+  input:focus {
+    outline: 3px solid #282828;
+  }
+
+
+@media (min-width: 400px) {
+  form {
+    grid-template-columns: 200px 1fr;
+    grid-gap: 16px;
+  }
+
+  label {
+    text-align: right;
+    grid-column: 1 / 2;
+  }
+
+  input,
+  button {
+    grid-column: 2 / 3;
+  }
+}
+
+
+
+

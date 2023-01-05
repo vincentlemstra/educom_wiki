@@ -29,7 +29,7 @@ class FormElement extends BaseList
 		foreach ($this->forminfo as $name => $info)
         {
             $current_value = $this->getFieldValue($name, $info);
-            echo '<label for="'.$name.'">'.$info['label'].'</label><br />';
+            echo '<label for="'.$name.'">'.$info['label'].'</label>';
 
             switch ($info['type'])
             {
@@ -46,7 +46,7 @@ class FormElement extends BaseList
                     $this->showInputField($name, $info, $current_value);
                     break;
             }
-            echo '<br />'.PHP_EOL;
+            echo ''.PHP_EOL;
             if (isset($this->postresult[$name.'_err']))
             {
                     echo '<span class="error">* '.$this->postresult[$name.'_err'].'</span><br/>';

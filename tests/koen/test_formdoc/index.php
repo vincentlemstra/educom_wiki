@@ -8,7 +8,7 @@ require_once 'siteDAO.php';
 require_once 'footer_element.php';
 require_once 'formview.class.php';
 
-$page = 'search';
+$page = 'register';
 $siteDAO = new SiteDAO();
 $menu = $siteDAO->getMenuItems();
 $bodycontent = $siteDAO->getTextByPage($page, 'div');

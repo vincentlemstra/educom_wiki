@@ -186,11 +186,26 @@ class SiteDAO
                 ];    
             case 'register' :
                 return [
-                    'name' => [
+                    'firstname' => [
                         'type' => 'text', 		
-                        'label'=> 'Je naam',
-                        'placeholder' => 'Vul hier je naam in',
-                    ],		
+                        'label'=> 'Je voornaam',
+                        'placeholder' => 'Vul hier je voornaam in',
+                    ],
+                    'preposition' => [
+                        'type' => 'text', 		
+                        'label'=> 'Tussenvoegsel',
+                        'placeholder' => 'Vul hier je tussenvoegsel in',
+                    ],
+                    'lastname' => [
+                        'type' => 'text', 		
+                        'label'=> 'Je achternaam',
+                        'placeholder' => 'Vul hier je achternaam in',
+                    ],	
+                    'birthdate' => [
+                        'type' => 'date', 		
+                        'label'=> 'Je geboortedatum',
+                        'placeholder' => 'Vul hier je geboortedatum',
+                    ],	
                     'email' => [
                         'type' => 'email',
                         'label'=> 'Je email-adres',
