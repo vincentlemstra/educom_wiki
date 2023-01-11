@@ -49,7 +49,7 @@ class ArticleModel extends BaseModel implements iArticleModel
     // ==============================================================================================
     public function getArticleNamesByAuthorId(int $author_id) : array
     {
-        $sql = "SELECT title FROM article WHERE author_id = ?";
+        $sql = "SELECT id, title FROM article WHERE author_id = ?";
         $var = [$author_id];
         return $this->crud->read($sql, $var);
     } 
