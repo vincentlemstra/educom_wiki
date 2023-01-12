@@ -4,16 +4,23 @@ class SiteDAO
 //==============================================================================
 // TO DO SELECT ITEMS FROM DATABASE
 //==============================================================================
-    public function getMenuItems() : array
+    public function getMenuItems(bool $loggedAuthor) : array
     {
-        return[
-                'home' => 'home',
-                'about' => 'over auteurs',
-                'contact' => 'contact',
-                'search' => 'zoeken',
-                'login' => 'login',
-                'register' => 'registratie',
-            ];
+        $menuitems = array( 'home' => 'home',
+        'about' => 'over auteurs',
+        'contact' => 'contact',
+        'search' => 'zoeken',
+        );
+        if(!$loggedAuthor)
+        {
+            $menuitems +=   array('login' => 'login',
+                            'register' => 'registratie');
+        }else{
+            $menuitems +=   array('logout' => 'uitloggen');
+        };
+
+        
+        return $menuitems;
 
     //when menu is in database we could use below...     
         //start function to get menu items from database
@@ -122,14 +129,13 @@ public function getArticleByID(int $id) : array
         switch ($page)
         {
             case 'about':
-                return '<div class="bodycontent"><h1>Over de auteurs</h1><p>Ineens weet je het, je wordt Web Developer en start een opleiding bij Educom!</p>'
-                //. '<img class="img-small" src="'.WEBIMG_FOLDER.'me.jpg" />'    
-                . '<p>'
-                . ' '
-                . ' '
-                . ' '
-                . ' '
-                . '</p></div>';
+                return '<div class="bodycontent"><h1>Over de wiki</h1>'  
+                . '<P>Sinds haar conceptie in 1982 is deze Wiki een begrip onder developers uit alle windstreken. '
+                . 'Kunt u het niet vinden op deze site, dan bestaat het simpelweg niet. '
+                . '</br></br>Stackoverwhat? Once you go Wiki, you never go panicki</br>- Linus Torvalds '
+                . '</br></br>We will never need more than 640kb of RAM or more than this Wiki</br>- Bill Gates<br>'
+                . ''
+                . '</p>';
             case 'contact': 
                 return '<h1>Contact</h1><p>Heb je vragen of opmerkingen over een reis, vul dan onderstaand formulier in en we nemen '
                 . 'zsm contact met je op.</p>';

@@ -1,8 +1,8 @@
 <?php
 require_once 'MainController.php';
 require_once SRC.'models/basemodel.php';
-require_once SRC.'models/AuthorModel.php';
-require_once SRC.'models/ArticleModel.php';
+require_once SRC.'models/authormodel.php';
+require_once SRC.'models/articlemodel.php';
 class PageController extends MainController implements iController
 {
     protected array $request;
@@ -54,12 +54,18 @@ class PageController extends MainController implements iController
         }
         else
         {
-            $this->doc = $this->getBaseModel()->createWebShopDoc($this->response);
+            $this->doc = $this->getBasemodel()->createWikiDoc($this->response);
+            require_once SRC.'views/text_block_view_element.php';
+            $this->doc->addElement(new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"'));
+            //add footer --> perhaps also in function? 
+            require_once SRC.'views/footer_element.php';
+            $this->doc->addElement(new FooterElement('&copy; '.date("Y").'&nbsp;', 'footer'));
         }
     }
 //==============================================================================
     protected function showResponse()
     {
+        //Tools::dump($this->doc);
         if ($this->doc)
         {
             $this->doc->addCssFile('./assets/css/style.css');
@@ -72,7 +78,8 @@ class PageController extends MainController implements iController
 //==============================================================================
     protected function isPageAllowed() : bool
     {
-        if (AuthorModel::loggedAuthor()) //to be made loggedAuthor check function
+        //echo Basemodel::loggedauthor();
+        if (BaseModel::loggedAuthor()) //to be made loggedAuthor check function
         {    
             if (in_array($this->response['page'], ['login','register']))
             {
@@ -84,7 +91,7 @@ class PageController extends MainController implements iController
         }    
         else
         {
-            if (in_array($this->response['page'], ['logout']))
+            if (in_array($this->response['page'], ['logout','edit']))
             {
                 $this->response[SYSERR] = 'Eerst inloggen a.u.b.';
                 $this->response['page'] = 'login';
@@ -97,27 +104,33 @@ class PageController extends MainController implements iController
 //==============================================================================    
     protected function handlePostRequest()
     {
-       //via authormodel get access to validate function in basemodel, it is returning the values in response['postresult']
-        if ($this->getAuthorModel()->validatePostedForm($this->response))
+        //$this->doc = $this->getBasemodel()->createWikiDoc($this->response);
+        
+        //via authormodel get access to validate function in basemodel, it is returning the values in response['postresult']
+        if ($this->getBaseModel()->validatePostedForm($this->response))
         {
             switch ($this->response['page'])
             {
                 case 'contact': 
-                    $this->doc = $this->authormodel->handleContact($this->response);
+                    
+                    $this->doc = $this->getAuthorModel()->handleContact($this->response);
                     break;
                 case 'login':
-                    $this->doc = $this->authormodel->handleLogin($this->response);
+                    require_once SRC.'views/form_element.php';
+                    $this->doc = $this->getAuthorModel()->handleLogin($this->response);
+                    $this->doc->menuElement = new MenuView($this->getBasemodel()->sitedao->getMenuItems(BaseModel::LoggedAuthor(), $this->response['page']));
                     break;
                 case 'register':
-                    $this->doc = $this->authormodel->handleRegistration($this->response);
+                    
+                    $this->doc = $this->getAuthorModel()->handleRegistration($this->response);
                     break;
-                case 'edit':
+                /*case 'edit':
                 //Tools::dump($this->response);
                     $this->doc = $this->getArticleModel()->handleEditItem($this->response);
                     break;
                 case 'nieuw_item':
                     $this->doc = $this->getadminmodel()->HandleNewItem($this->response);
-                    break;  
+                    break;  */
                 case 'Author':
                     $this->doc = $this->getAuthorModel()->handleAuthorItems($this->response);
                     break;
@@ -125,31 +138,40 @@ class PageController extends MainController implements iController
         }  
         else
         {
-            $this->doc = $this->authormodel->createArticleFormDoc($this->response);
+            require_once SRC.'views/form_element.php';
+            //tools::dump($this->response['forminfo']);
+            $this->doc = $this->getBasemodel()->createWikiDoc($this->response);
+            $this->doc->addElement(new FormElement($this->response,$this->response['fieldinfo'], $this->response['postresult']));
         }
+    //add footer --> perhaps also in function? 
+    require_once SRC.'views/footer_element.php';
+    $this->doc->addElement(new FooterElement('&copy; '.date("Y").'&nbsp;', 'footer'));
     }        
 //==============================================================================
     protected function handleGetRequest()
     {
-        require_once SRC.'views/html_doc.php';
-        require_once SRC.'views/menu_element.php';
-        $this->doc = new HtmlDoc;
-        $this->doc->setTitle('Wiki page');
-        $this->doc->addElement(new MenuView($this->getBasemodel()->sitedao->getMenuItems()));
-
+        //Tools::dump($this->response);
+        $this->doc = $this->getBasemodel()->createWikiDoc($this->response);
+        
         switch ($this->response['page'])
         {
             case 'home':
-            case 'about':
                 require_once SRC.'views/text_block_view_element.php';
                 $this->doc->addElement(new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"'));
+                break;
+            case 'about':
+                require_once SRC.'views/text_block_view_element.php';
+                require_once SRC.'views/authorlist_view_element.php';
+                $this->doc->addElement(new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"'));
+                $this->doc->addElement(new AuthorListView($this->getAuthorModel()->getAllAuthors()));
                 break;
             case 'contact':
             case 'login':
             case 'register':
             case 'search':
+                $this->response = $this->getBaseModel()->createWikiFormDoc($this->response);
                 require_once SRC.'views/form_element.php';
-                $this->doc->addElement(new FormElement($this->getBaseModel()->sitedao->getFieldInfoByPage($this->response['page'])));
+                $this->doc->addElement(new FormElement($this->response['forminfo'],$this->response['fieldinfo']));
                 break;
             case 'Article':    
                 $this->doc = $this->getArticleModel()->handleArticleDetail($this->response);
@@ -161,9 +183,14 @@ class PageController extends MainController implements iController
                 $this->doc = $this->getAuthorModel()->creatAuthorDoc($this->response);
                 break; 
             case 'logout':
-                $this->doc = $this->getAuthorModel()->handleLogout($this->response);
+                $this->doc = null;
+                $this->response = $this->getAuthorModel()->handleLogout($this->response);
+                $this->doc = $this->getBasemodel()->createWikiDoc($this->response);
+                $this->doc->menuElement = new MenuView($this->getBasemodel()->sitedao->getMenuItems(BaseModel::LoggedAuthor(), $this->response['page']));
+                $this->doc->addElement(new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"'));
                 break;
         }
+        //add footer --> perhaps also in function? 
         require_once SRC.'views/footer_element.php';
         $this->doc->addElement(new FooterElement('&copy; '.date("Y").'&nbsp;', 'footer'));
 
@@ -189,7 +216,7 @@ class PageController extends MainController implements iController
         return $this->authormodel;    
     }    
 //==============================================================================
-    protected function getArticleModel() : WebshopModel
+    protected function getArticleModel() : ArticleModel
     {
         if (is_null($this->articlemodel))
         {

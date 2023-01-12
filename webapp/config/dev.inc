@@ -1,5 +1,5 @@
 <?php
-define('TITLE',         'BIO Rozen'); 
+define('TITLE',         'Wiki'); 
 define('AUTHOR',        'Koen');
 define('NOP',           'NOP');
 define('USERID',        'UID');
@@ -17,7 +17,7 @@ define('SHOPIMG_FOLDER','.\assets\shop\\');
 define('WEBIMG_FOLDER', '.\assets\img\\');
 
 define("PDOHOST",		"127.0.0.1");
-define('PDODATABASE',   'educom');
+define('PDODATABASE',   'wiki');
 define('PDOUSER',       'root');
 define('PDOPASS',       '56787F62767E');
 define('PDOPASSUNSAFE',  'bonsai');

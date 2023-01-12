@@ -8,16 +8,18 @@ class FormElement extends BaseList
 	protected array $forminfo;
 	protected array $postresult;
 
-	public function __construct(array $forminfo, ?array $postresult=[])
+	public function __construct(array $forminfo, array $fieldinfo, ?array $postresult=[])
 	{
         $this->forminfo 	= $forminfo;
+        $this->fieldinfo    = $fieldinfo;
 		$this->postresult 	= $postresult;
         parent::__construct($this->forminfo);
 	}
 //==============================================================================	
 	public function openList()
 	{
-		$page = $this->getValueFromArray('page', $this->forminfo, 'NOTSET');
+		//Tools::dump($this->forminfo);
+        $page = $this->getValueFromArray('page', $this->forminfo, 'NOTSET');
         $action = $this->getValueFromArray('action', $this->forminfo, '');
         $method = $this->getValueFromArray('method', $this->forminfo, 'POST');
         echo '<form action="'.$action.'" method="'.$method.'" enctype="multipart/form-data" >
@@ -26,7 +28,7 @@ class FormElement extends BaseList
 //==============================================================================
 	public function showItems()
 	{
-		foreach ($this->forminfo as $name => $info)
+        foreach ($this->fieldinfo as $name => $info)
         {
             $current_value = $this->getFieldValue($name, $info);
             echo '<label for="'.$name.'">'.$info['label'].'</label>';

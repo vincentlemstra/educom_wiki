@@ -4,9 +4,10 @@ Abstract class BaseList implements iView
 {
 protected array $items; //protected--> kan overschreven worden door extends
 
-	public function __construct(array $items)
+	public function __construct(array $items , $page='')
 	{
 		$this->items = $items;
+		$this->page = $page;
 	}
 
 	final public function show() : void //in extend niet overschrijfbaar
@@ -20,7 +21,7 @@ protected array $items; //protected--> kan overschreven worden door extends
 	{
 		foreach($this->items as $item)
 		{
-			$this->showItem($item);
+			$this->showItem($item, $this->page);
 		}
 	}
 	abstract function openList();

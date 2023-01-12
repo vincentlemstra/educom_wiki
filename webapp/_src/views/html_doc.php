@@ -72,6 +72,7 @@ class HtmlDoc //implements iView
 	
 	protected function bodyContent() 
 	{ 
+		//Tools::dump($this->elements);
 		foreach ($this->elements as $element)
 		{
 			if ($element instanceof iView)

@@ -24,6 +24,9 @@ nav a{
     text-decoration:none;
     font-family: Georgia, serif;
 }
+.menuactive{
+  color:white;
+}
 
 footer {
     width : 100%;
@@ -49,7 +52,7 @@ footer {
     grid-column-start: 1;
     grid-column-end: 4;
     grid-row-start: 1;
-    grid-row-end: 8;
+    grid-row-end: 5;
   }
 
 /* form styling */
@@ -136,6 +139,16 @@ div.article_code{
   grid-row: 6 / 9;
   font-size: 15px;
 }
+
+/* Author styling */
+
+.authorlist-container{
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row: 4 / 6;
+  text-align: center;
+}
+
 
 @media (min-width: 400px) {
   form {
