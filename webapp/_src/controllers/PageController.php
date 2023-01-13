@@ -91,7 +91,7 @@ class PageController extends MainController implements iController
         }    
         else
         {
-            if (in_array($this->response['page'], ['logout','edit']))
+            if (in_array($this->response['page'], ['logout','edit','newarticle']))
             {
                 $this->response[SYSERR] = 'Eerst inloggen a.u.b.';
                 $this->response['page'] = 'login';
@@ -112,7 +112,6 @@ class PageController extends MainController implements iController
             switch ($this->response['page'])
             {
                 case 'contact': 
-                    
                     $this->doc = $this->getAuthorModel()->handleContact($this->response);
                     break;
                 case 'login':
@@ -124,13 +123,12 @@ class PageController extends MainController implements iController
                     
                     $this->doc = $this->getAuthorModel()->handleRegistration($this->response);
                     break;
-                /*case 'edit':
-                //Tools::dump($this->response);
-                    $this->doc = $this->getArticleModel()->handleEditItem($this->response);
+                case 'newarticle':
+                    $this->doc = $this->getArticleModel()->handleNewArticle($this->response);
                     break;
-                case 'nieuw_item':
-                    $this->doc = $this->getadminmodel()->HandleNewItem($this->response);
-                    break;  */
+                case 'editarticle':
+                    $this->doc = $this->getArticleModel()->handleEditArticle($this->response);
+                    break;  
                 case 'Author':
                     $this->doc = $this->getAuthorModel()->handleAuthorItems($this->response);
                     break;
@@ -169,18 +167,22 @@ class PageController extends MainController implements iController
             case 'login':
             case 'register':
             case 'search':
+            case 'newarticle':
                 $this->response = $this->getBaseModel()->createWikiFormDoc($this->response);
                 require_once SRC.'views/form_element.php';
                 $this->doc->addElement(new FormElement($this->response['forminfo'],$this->response['fieldinfo']));
                 break;
-            case 'Article':    
-                $this->doc = $this->getArticleModel()->handleArticleDetail($this->response);
+            case 'article':
+                $this->doc->addElement($this->getArticleModel()->handleArticleDetail($this->response));
                 break;
-            case 'EditArticle':
-                $this->doc = $this->getArticleModel()->handleArticleEditFormDoc($this->response);
+            case 'editarticle':
+                $this->response = $this->getArticleModel()->handleArticleDetailForm($this->response);
+                require_once SRC.'views/form_element.php';
+                $this->doc->addElement(new FormElement($this->response['forminfo'],$this->response['fieldinfo'], $this->response['postresult']));
                 break;
-            case 'Author':
-                $this->doc = $this->getAuthorModel()->creatAuthorDoc($this->response);
+            case 'author':
+                require_once SRC.'views/article_view_element.php';
+                $this->doc->addElement($this->getAuthorModel()->handleAuthorDetail($this->response));
                 break; 
             case 'logout':
                 $this->doc = null;

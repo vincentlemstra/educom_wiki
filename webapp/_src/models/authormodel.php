@@ -23,21 +23,27 @@ class AuthorModel extends BaseModel
 
 //===================================================================
 
-    public function getAuthorById(int $id)
+    public function getAuthorById(int $id) : array|false
     {
-        $sql = "SELECT * FROM author WHERE id=?";
-        $var = [$id];
-        return $this->_crud->readOne($sql, $var);
+        return $this->_crud->selectOne(
+            "SELECT * FROM author WHERE id=:id",
+            [
+                'id' => [$id, false]
+            ]    
+        );
     }
 
 //===================================================================
 
-    public function getAuthorByEmail(string $email) : array|false
-    {
-        $sql = "SELECT id, email, password FROM author WHERE email=?";
-        $var = [$email];
-        return $this->_crud->readOne($sql, $var);            
-    }
+public function getAuthorByEmail(string $email) : array|false
+{
+    return $this->_crud->selectOne(
+        "SELECT * FROM author WHERE email=:email",
+        [
+            'email' => [$email, false]
+        ]    
+    );
+}
 
 //===================================================================
 
@@ -72,7 +78,7 @@ class AuthorModel extends BaseModel
     public function handleLogin(array &$response) : FormElement|TextBlockViewElement|array|HtmlDoc
     {
         $var = $response['postresult']['email'];
-        $authordetails = $this->getUserByEmail($response['postresult']['email']);
+        $authordetails = $this->getAuthorByEmail($response['postresult']['email']);
         if($authordetails == FALSE)
         {
                 //Author is not legit, let's stay on Login Page! 
@@ -109,16 +115,6 @@ class AuthorModel extends BaseModel
             }
         }
     }
-    //==============================================================================
-    public function getUserByEmail(string $email) : array|false
-    {
-        return $this->_crud->selectOne(
-            "SELECT * FROM author WHERE email=:email",
-            [
-                'email' => [$email, false]
-            ]    
-        );
-    }
     //==============================================================================    
     public function handleLogout(array &$response) : array
     {
@@ -150,6 +146,45 @@ class AuthorModel extends BaseModel
         $this->doc->addElement(new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"'));
         return $this->doc;
     }
+    //============================================================================== 
+    public function handleAuthorDetail(array &$response)
+    {
+        //check if author ID exists in database
+        $id = Tools::getRequestVar('id', false, 0, true);
+        $author = $this->getAuthorById($id);
+        $articles = $this->getArticleNamesByAuthorId($id);
+        if($author)
+        {
+            //return author element
+            require_once SRC.'views/author_view_element.php';
+            return new AuthorPageView($author, $articles);
+        }
+        else 
+        {
+            //stay on about page, with message: author not ok.
+            $response[SYSERR] = 'Auteur niet gevonden.. Heb je wel op een Auteur geklikt?';
+            $response['page'] = 'search';
+            //error message toevoegen --> issue met volgorde elementen .. 
+            require_once SRC.'views/msg_view_element.php';
+            $this->doc = new ShowMessage($response);
+            //$this->doc = $this->createWikiFormDoc($response);
+            //$this->doc = new FormElement($response['forminfo'],$response['fieldinfo']);
+            return $this->doc; 
+        }
+    }
+    //============================================================================== 
+    public function getArticleNamesByAuthorId(int $author_id) : array|false
+    {        
+        return $this->_crud->selectMore(
+            "SELECT * FROM article WHERE author_id =:id",
+            [
+                'id' => [$author_id, false]
+            ]    
+        );
+
+
+    } 
+    //============================================================================== 
 }
 ?>
 

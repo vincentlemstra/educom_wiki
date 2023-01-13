@@ -135,7 +135,7 @@ public function getArticleByID(int $id) : array
                 . '</br></br>Stackoverwhat? Once you go Wiki, you never go panicki</br>- Linus Torvalds '
                 . '</br></br>We will never need more than 640kb of RAM or more than this Wiki</br>- Bill Gates<br>'
                 . ''
-                . '</p>';
+                . '</p></div>';
             case 'contact': 
                 return '<h1>Contact</h1><p>Heb je vragen of opmerkingen over een reis, vul dan onderstaand formulier in en we nemen '
                 . 'zsm contact met je op.</p>';
@@ -277,8 +277,8 @@ public function getArticleByID(int $id) : array
                         ]
                     ]
                 ];
-            case 'article':
-            //case 'nieuw_item':
+            case 'newarticle':
+            case 'editarticle':
                 return [
                     'title' => [
                         'type' => 'text',       
@@ -286,35 +286,40 @@ public function getArticleByID(int $id) : array
                         'placeholder' => 'Vul hier het artikel naam in',
                     ],
                     'tag' => [
-                        'type' => 'select multiple',
+                        'type' => 'select',
                         'label'=> 'selecteer Tag(s)',
                         'options' => [
-                            'Javascript' => 'Javascript',
-                            'PHP' => 'PHP',
-                            'Ajax' => 'Ajax',
-                            'CSS' => 'CSS',
+                            'Javascript' => '1',
+                            'PHP' => '2',
+                            'Ajax' => '3',
+                            'CSS' => '4',
+                            'NodeJS' => '5'
                             ]
                         ],
+                    /*
                     'new tag' => [
                          'type' => 'text',
-                         'label' =>'Nieuwe tag',
+                         'label' =>'tag',
                          'placeholder' => 'Voeg nieuwe tag toe'
                     ],
+                    */
+                    /*
                     'add' => [
                         'type' => 'submit',
                         'value' => 'toevoegen'
-                    ],         
-                    'image upload' => [
+                    ],  
+                    */   
+                    /*'image upload' => [
                         'type' => 'file',   
                         'label'=> 'image',
                         'placeholder' => 'huidige afbeelding overschrijven',
-                    ],
-                    'text' => [
+                    ],*/
+                    'explanation' => [
                         'type' => 'textarea',
                         'label'=> 'artikel tekst',
                         'placeholder' => 'Vul hier de artikel met tekst',
                     ],
-                    'codeblock' => [
+                    'code_block' => [
                         'type' => 'textarea',
                         'label'=> 'Code-block',
                         'placeholder' => 'Vul hier het codeblok',

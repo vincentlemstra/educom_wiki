@@ -7,3 +7,4 @@ require_once SRC.'dal\Crud.php';
 require_once SRC.'controllers\MainController.php';
 $pagecontroller = new MainController();
 $pagecontroller->handleRequest();
+
