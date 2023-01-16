@@ -113,6 +113,7 @@ input {
   grid-template-columns: auto auto auto;
   gap: 5px;
   padding: 5px;
+  min-height: 80vh;
 }
 
 .article-grid > div {
@@ -123,7 +124,7 @@ input {
   border: 1px solid;
 }
 .article_image{
-  grid-row: 1 / 6;
+  grid-row: 1 / 4;
   margin: 5%;
 }
 
@@ -153,7 +154,7 @@ div.article_rate{
 }
 
 div.article_text{
-  grid-column: 2 / 4;
+  grid-column: 1 / 4;
   grid-row: 4 / 6;
   font-size: 15px;
 }

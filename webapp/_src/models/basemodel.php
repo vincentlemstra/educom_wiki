@@ -2,7 +2,7 @@
 require_once SRC.'dal/siteDAO.php';
 class BaseModel {
     // --- PROPERTIES ---
-    public SiteDAO $sitedao; //crud in future, when sitedao is in database !! :-)
+    public SiteDAO $sitedao; //crud in future, when sitedao is in database !! :-) not safe
     protected Crud $_crud;
     // --- CONSTRUCT ---
     public function __construct()
@@ -58,7 +58,6 @@ public static function loggedAuthor() : bool
         $this->updateResponse($response);
         $response['forminfo'] = $this->sitedao->getFormInfoByPage($response['page']);
         $response['fieldinfo'] = $this->sitedao->getFieldInfoByPage($response['page']);
-        //$this->doc->addElement(new FormElement($response['forminfo'], $response['fieldinfo']));
         return $response;
     }    
     //==============================================================================
@@ -66,7 +65,7 @@ public static function loggedAuthor() : bool
     {
         $loggedauthor = $this->loggedAuthor();
         $response['loggedauthor'] = $loggedauthor;
-        $response['menuitems'] = $this->sitedao->getMenuItems($loggedauthor);
+        $response['menuitems'] = $this->sitedao->getMenuItems($loggedauthor); // Gaat dubbel, even checken of dit nodig is.. 
         $response['bodytext'] = $this->sitedao->getTextByPage($response['page']);
     }
     //==============================================================================

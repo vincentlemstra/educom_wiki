@@ -17,6 +17,7 @@ class ArticleModel extends BaseModel implements iArticleModel
     public function handleArticleDetail(&$response) 
     {
         $id = Tools::getRequestVar('article_id', false, 0, true);
+        Tools::dump($response);
         if($id === 0)
         {
             $response[SYSERR] = 'Ongeldige Blog';
@@ -32,26 +33,26 @@ class ArticleModel extends BaseModel implements iArticleModel
             $response['page'] = 'search';
             //error message toevoegen --> issue met volgorde elementen .. 
             require_once SRC.'views/msg_view_element.php';
-            $this->doc = new ShowMessage($response);
-            return $this->doc;
+            $element = new ShowMessage($response);
+            return $element;
         }
         else
         { 
-            $article['tag'] = $this->getTagsByArticleId($id);
-            $count_tags = count($article['tag']);
+            $article['tags'] = $this->getTagsByArticleId($id);
+            $count_tags = count($article['tags']);
             $tags = '';
             for($x = 0 ; $x < $count_tags; $x++)
             { 
-                $tags .= $article['tag'][$x]['name'].' ';
+                $tags .= $article['tags'][$x]['name'].' ';
             }
-            $article['id'] =$id;
-            $article['tag'] = $tags;
+            $article['id'] = $id;
+            $article['tags'] = $tags;
             //to get rating from Database
             $article['rating'] = 5;
             $response['article'] = $article;
             require_once SRC.'views/article_view_element.php';
-            $this->doc = new ArticleView($article , 'div class="article-grid"');
-            return $this->doc;
+            $element = new ArticleView($article, $this->loggedAuthor(), 'div class="article-grid"');
+            return $element;
         }
     }
     //==================================================================
@@ -79,19 +80,17 @@ class ArticleModel extends BaseModel implements iArticleModel
         }
         else
         {
-        $response['page']= 'article';
-        Tools::dump($response['postresult']);
-        $response[SYSMSG] = 'Article succesfully saved';
-        $this->doc = $this->createWikiDoc($response);
-        require_once SRC.'views/text_block_view_element.php';
-        require_once SRC.'views/article_view_element.php';
-        $article = $this->getArticleById($id);
-        $article['tags'] = $this->getTagsByArticleId($id);
-        $article['rating'] = 'n/a'; // TO DO RATING !!
-        $this->doc->addElement(new ArticleView($article, 'div class="article-grid"'));
-        
-        //OK-> Save and Show article and give succes message.
-        return $this->doc;
+            $response['page']= 'article';
+            $response[SYSMSG] = 'Article succesfully saved';
+            require_once SRC.'views/text_block_view_element.php';
+            require_once SRC.'views/article_view_element.php';
+            $article = $this->getArticleById($id);
+            $article['tags'] = $this->getTagsByArticleId($id);
+            $article['rating'] = 'n/a'; // TO DO RATING !!
+            $element = new ArticleView($article, $this->loggedAuthor(), 'div class="article-grid"');
+            
+            //OK-> Save and Show article and give succes message.
+            return $element;
         }
     }
 
@@ -108,48 +107,114 @@ class ArticleModel extends BaseModel implements iArticleModel
         }
         else 
         {
-            $article = $this->getArticleById($id);
+            $article = $this->getArticleById($article['id']);
         }
         if($article === false)
         {
             $response[SYSERR] = 'Blog niet gevonden';
             $response['page'] = 'search';
-            //error message toevoegen --> issue met volgorde elementen .. 
             require_once SRC.'views/msg_view_element.php';
-            $this->doc = new ShowMessage($response);
-            return $this->doc;
+            $element = new ShowMessage($response);
+        //add element search ? 
+            return $element;
         }
         elseif($article['author_id'] == $_SESSION['UID'])
         { 
-            $article['tag'] = $this->getTagsByArticleId($id);
-            $count_tags = count($article['tag']);
+            $article['tags'] = $this->getTagsByArticleId($article['id']);
+            $count_tags = count($article['tags']);
             $tags = '';
             for($x = 0 ; $x < $count_tags; $x++)
             { 
-                $tags .= $article['tag'][$x]['name'].' ';
+                $tags .= $article['tags'][$x]['name'].' ';
             }
-            $article['id'] =$id;
-            $article['tag'] = $tags;
-            
+            //$article['id'] =$id;
+            $article['tags'] = $tags;
             $response = $this->createWikiFormDoc($response);
 
             require_once SRC.'views/text_block_view_element.php';
             require_once SRC.'views/article_view_element.php';
-            $article = $this->getArticleById($id);
-            $article['tags'] = $this->getTagsByArticleId($id);
+            $article = $this->getArticleById($article['id']);
+            $article['tags'] = $this->getTagsByArticleId($article['id']);
             $article['rating'] = 'n/a'; // TO DO RATING !!
-            //$this->doc->addElement(new ArticleView($article, 'div class="article-grid"'));
             $response['postresult'] = $article;
-            //OK-> Save and Show article and give succes message.
-            return $response;
-        // if so get article data and tags
-         // create wikiformdocforarticle
+            $element = new FormElement($response['forminfo'],$response['fieldinfo'], $response['postresult']);
+            return $element;
         }
         else 
         {
-            // go to home? 
+            // add error message and go to homepage
+            $response[SYSERR] = 'Sorry, je mag dit blog niet aanpassen. Je kan alleen je eigen blogs aanpassen.';
+            require_once SRC.'views/msg_view_element.php';
+            $element = new ShowMessage($response);
+            return $element;         
         }
        
+    }
+    // ==================================================
+    public function handleEditArticle(&$response)
+    {
+        //check if article nr is matching with authors created articles in db
+         $article['id'] = Tools::getRequestVar('article_id',false,0,true);
+         if($article['id']=== 0)
+         {
+             $response[SYSERR] = 'Ongeldige Blog';
+             $article = false;
+         }
+         else 
+         {
+             $article = $this->getArticleById($article['id']);
+         }
+         if($article === false)
+         {
+             $response[SYSERR] = 'Blog niet gevonden';
+             $response['page'] = 'search';
+             require_once SRC.'views/msg_view_element.php';
+             $elements [] = new ShowMessage($response);
+         //add element search ? 
+             return $elements;
+         }
+         elseif($article['author_id'] !== $_SESSION['UID'])
+         { 
+        //if not, reply error, article cannot be edited..
+            $response[SYSERR] = 'Blog niet gevonden';
+            $response['page'] = 'search';
+            require_once SRC.'views/msg_view_element.php';
+            $elements [] = new ShowMessage($response);
+            return $elements;
+       
+        }
+        else
+        {
+        //if ok, save the article -->update query of current article ID. 
+            $response['postresult']['img'] = null;
+            $id = $this->updateArticleById($article['id'], $response['postresult']['title'], $response['postresult']['img'], 
+                                            $response['postresult']['explanation'], $response['postresult']['code_block'], 
+                                            $response['postresult']['tag']);
+        }
+        //if succes -> show article with succes message
+        if($id)
+        {
+            $response['page']= 'article';
+            $response[SYSMSG] = 'Article succesfully saved';
+            require_once SRC.'views/article_view_element.php';
+            $article = $this->getArticleById($article['id']);
+            $article['tags'] = $this->getTagsByArticleId($article['id']);
+            $article['rating'] = 'n/a'; // TO DO RATING !!
+            $element = new ArticleView($article, $this->loggedauthor(), 'div class="article-grid"');
+            
+            //OK-> Save and Show article and give succes message.
+            return $element;
+        }
+        //no succes -> add error msg and show author page.
+        else
+        {
+            $response[SYSERR] = 'Article not saved, error occurred during saving..did you adjust anything at all?';
+            $response['page'] = 'home';
+            require_once SRC.'views/text_block_view_element.php';
+            $element = new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
+            return $element;
+
+        }
     }
     // ==============================================================================================
     // createArticle
@@ -258,30 +323,22 @@ class ArticleModel extends BaseModel implements iArticleModel
         return $this->crud->create($sql, $var);
     }
 
-
-    
-
     // ==============================================================================================
     // updateArticleById
-    // out: lastInsertId()
+    // out: numberofrecords()
     // ==============================================================================================
-    public function updateArticleById(
-        int $article_id, 
-        string $title, 
-        string $img, 
-        string $explanation, 
-        string $code_block, 
-        array $tags
-            ) : int
+    public function updateArticleById(int $article_id, string $title, /*string*/ $img, string $explanation, string $code_block, /*array*/ $tags) : int|false
     {
-        $sql = "UPDATE article SET title = ?, img = ?, explanation = ?, code_block = ?, date_edit =  CURRENT_TIMESTAMP() WHERE id = ?";
-        $var = [$title, $img, $explanation, $code_block, $article_id];
-        $article_id = $this->crud->update($sql, $var);
-
-        $this->deleteArticleTags($article_id);
-        $this->setArticleTags($article_id, $tags);
-
-        return $article_id;
+        return $this->_crud->doUpdate("UPDATE article SET title=:title, img=:img, explanation=:explanation, code_block=:code_block WHERE id=:id",
+                                        [
+                                            'title' => [$title, false],
+                                            'img' => [$img, false],
+                                            'explanation' =>[$explanation, false],
+                                            'code_block' =>[$code_block, false],
+                                            'id' => [$article_id, true]
+                                        ]
+                                    );
+        //to do adjust article tags
     }
 
     // ==============================================================================================

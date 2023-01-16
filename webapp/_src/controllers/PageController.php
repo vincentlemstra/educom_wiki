@@ -7,9 +7,10 @@ class PageController extends MainController implements iController
 {
     protected array $request;
     protected array $response;
+    protected array $elements;
     protected ?BaseModel $basemodel = null;
-    protected ?AuthorModel $AuthorModel = null;
-    protected ?ArticleModel $ArticleModel = null;
+    protected ?AuthorModel $authormodel = null;
+    protected ?ArticleModel $articlemodel = null;
     protected ?HtmlDoc $doc = null;
 
 //==============================================================================
@@ -29,6 +30,8 @@ class PageController extends MainController implements iController
         catch(Exception $e) 
         {
             ob_end_clean();
+            //add log ? 
+            // add custom error message?
             echo $e->getMessage(); 
         }
     }
@@ -45,7 +48,8 @@ class PageController extends MainController implements iController
 //==============================================================================
     protected function validateRequest()
     {
-        $this->response = $this->request; // getoond == gevraagd
+        $this->response = $this->request;// getoond == gevraagd
+        $this->elements = []; 
         if ($this->isPageAllowed())
         {    
             $this->request['posted']
@@ -65,11 +69,25 @@ class PageController extends MainController implements iController
 //==============================================================================
     protected function showResponse()
     {
-        //Tools::dump($this->doc);
+        //create new html doc --> standard elements (Html document, header, title, menu and message)
+        $this->doc = $this->getBasemodel()->createWikiDoc($this->response);
+         //variable elements:
+         
+        foreach($this->elements as $element)
+        {
+            //for each elements add elements to htmlDoc
+           $this->doc->addElement($element);
+        }
+
+        //add standard elements to html document -> footer, JS, CSS
         if ($this->doc)
         {
+            //standard elements
+            require_once SRC.'views/footer_element.php';
+            $this->doc->addElement(new FooterElement('&copy; '.date("Y").'&nbsp;', 'footer'));
+            //CSS
             $this->doc->addCssFile('./assets/css/style.css');
-            //$this->doc->addJsFile('./assets/js/jquery-3.6.1.min.js', true);
+            //JavaScript
             //$this->doc->addJsFile('./assets/js/rate.js', false);
             $this->doc->show();
         }  
@@ -79,7 +97,7 @@ class PageController extends MainController implements iController
     protected function isPageAllowed() : bool
     {
         //echo Basemodel::loggedauthor();
-        if (BaseModel::loggedAuthor()) //to be made loggedAuthor check function
+        if (BaseModel::loggedAuthor())
         {    
             if (in_array($this->response['page'], ['login','register']))
             {
@@ -103,99 +121,82 @@ class PageController extends MainController implements iController
     }    
 //==============================================================================    
     protected function handlePostRequest()
-    {
-        //$this->doc = $this->getBasemodel()->createWikiDoc($this->response);
-        
+    {       
         //via authormodel get access to validate function in basemodel, it is returning the values in response['postresult']
         if ($this->getBaseModel()->validatePostedForm($this->response))
         {
             switch ($this->response['page'])
             {
                 case 'contact': 
-                    $this->doc = $this->getAuthorModel()->handleContact($this->response);
+                    $this->elements [] = $this->getAuthorModel()->handleContact($this->response);
                     break;
                 case 'login':
                     require_once SRC.'views/form_element.php';
-                    $this->doc = $this->getAuthorModel()->handleLogin($this->response);
-                    $this->doc->menuElement = new MenuView($this->getBasemodel()->sitedao->getMenuItems(BaseModel::LoggedAuthor(), $this->response['page']));
+                    $this->elements [] = $this->getAuthorModel()->handleLogin($this->response);
+                    //$this->doc->menuElement = new MenuView($this->getBasemodel()->sitedao->getMenuItems(BaseModel::LoggedAuthor(), $this->response['page']));
                     break;
                 case 'register':
-                    
-                    $this->doc = $this->getAuthorModel()->handleRegistration($this->response);
+                    //not finished -> to Do .. 
+                    $this->elements [] = $this->getAuthorModel()->handleRegistration($this->response);
                     break;
                 case 'newarticle':
-                    $this->doc = $this->getArticleModel()->handleNewArticle($this->response);
+                    $this->elements [] = $this->getArticleModel()->handleNewArticle($this->response);
                     break;
                 case 'editarticle':
-                    $this->doc = $this->getArticleModel()->handleEditArticle($this->response);
+                    $this->elements [] = $this->getArticleModel()->handleEditArticle($this->response);
                     break;  
                 case 'Author':
-                    $this->doc = $this->getAuthorModel()->handleAuthorItems($this->response);
+                    $this->elements [] = $this->getAuthorModel()->handleAuthorItems($this->response);
                     break;
             }
         }  
         else
         {
             require_once SRC.'views/form_element.php';
-            //tools::dump($this->response['forminfo']);
-            $this->doc = $this->getBasemodel()->createWikiDoc($this->response);
-            $this->doc->addElement(new FormElement($this->response,$this->response['fieldinfo'], $this->response['postresult']));
+            $this->elements [] = new FormElement($this->response,$this->response['fieldinfo'], $this->response['postresult']);
         }
-    //add footer --> perhaps also in function? 
-    require_once SRC.'views/footer_element.php';
-    $this->doc->addElement(new FooterElement('&copy; '.date("Y").'&nbsp;', 'footer'));
-    }        
+    }
 //==============================================================================
     protected function handleGetRequest()
     {
-        //Tools::dump($this->response);
-        $this->doc = $this->getBasemodel()->createWikiDoc($this->response);
-        
         switch ($this->response['page'])
         {
             case 'home':
                 require_once SRC.'views/text_block_view_element.php';
-                $this->doc->addElement(new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"'));
+                $this->elements [] = new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"');
                 break;
             case 'about':
                 require_once SRC.'views/text_block_view_element.php';
                 require_once SRC.'views/authorlist_view_element.php';
-                $this->doc->addElement(new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"'));
-                $this->doc->addElement(new AuthorListView($this->getAuthorModel()->getAllAuthors()));
+                $this->elements [] = new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"');
+                $this->elements [] = new AuthorListView($this->getAuthorModel()->getAllAuthors());
                 break;
             case 'contact':
             case 'login':
             case 'register':
             case 'search':
             case 'newarticle':
+                //To do : create 1 line, let de model start the createwikiformdoc if checks are ok.. else add other elements (tekstblock and error message)
                 $this->response = $this->getBaseModel()->createWikiFormDoc($this->response);
                 require_once SRC.'views/form_element.php';
-                $this->doc->addElement(new FormElement($this->response['forminfo'],$this->response['fieldinfo']));
+                $this->elements [] = new FormElement($this->response['forminfo'],$this->response['fieldinfo']);
                 break;
             case 'article':
-                $this->doc->addElement($this->getArticleModel()->handleArticleDetail($this->response));
+                $this->elements [] = $this->getArticleModel()->handleArticleDetail($this->response);
                 break;
             case 'editarticle':
-                $this->response = $this->getArticleModel()->handleArticleDetailForm($this->response);
                 require_once SRC.'views/form_element.php';
-                $this->doc->addElement(new FormElement($this->response['forminfo'],$this->response['fieldinfo'], $this->response['postresult']));
+                $this->elements [] = $this->getArticleModel()->handleArticleDetailForm($this->response);
                 break;
             case 'author':
                 require_once SRC.'views/article_view_element.php';
-                $this->doc->addElement($this->getAuthorModel()->handleAuthorDetail($this->response));
+                $this->elements [] = $this->getAuthorModel()->handleAuthorDetail($this->response);
                 break; 
             case 'logout':
-                $this->doc = null;
-                $this->response = $this->getAuthorModel()->handleLogout($this->response);
-                $this->doc = $this->getBasemodel()->createWikiDoc($this->response);
-                $this->doc->menuElement = new MenuView($this->getBasemodel()->sitedao->getMenuItems(BaseModel::LoggedAuthor(), $this->response['page']));
-                $this->doc->addElement(new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"'));
+                //$this->response = $this->getAuthorModel()->handleLogout($this->response);
+                $this->elements [] = $this->getAuthorModel()->handleLogout($this->response);
                 break;
         }
-        //add footer --> perhaps also in function? 
-        require_once SRC.'views/footer_element.php';
-        $this->doc->addElement(new FooterElement('&copy; '.date("Y").'&nbsp;', 'footer'));
-
     }    
 //==============================================================================
 //  CREATE WHEN NEEDED .... 
@@ -206,7 +207,7 @@ class PageController extends MainController implements iController
         {
             $this->basemodel = new BaseModel();
         }
-        return $this->basemodel;    
+        return $this->basemodel;
     }    
 //==============================================================================
     protected function getAuthorModel() : AuthorModel

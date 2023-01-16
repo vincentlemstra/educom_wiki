@@ -84,10 +84,10 @@ public function getAuthorByEmail(string $email) : array|false
                 //Author is not legit, let's stay on Login Page! 
                 require_once SRC.'views/form_element.php';
                 //show form again with inputted values... 
-                $this->doc = $this->createWikiDoc($response);
+                //$this->doc = $this->createWikiDoc($response);
                 $response[SYSERR] = "Het Email adres is onbekend!";
-                $this->doc->addElement(new FormElement($response,$response['fieldinfo'], $response['postresult']));
-                return $this->doc;
+                $element = new FormElement($response,$response['fieldinfo'], $response['postresult']);
+                return $element;
         }
         else
         {
@@ -98,10 +98,10 @@ public function getAuthorByEmail(string $email) : array|false
                 $_SESSION[USERNAME] = $authordetails['firstname'];
                 $response[SYSMSG] = "welkom ".$authordetails['firstname'];
                 $response['page']= 'home';
-                $this->doc = $this->createWikiDoc($response);
+                //$this->doc = $this->createWikiDoc($response);
                 require_once SRC.'views/text_block_view_element.php';
-                $this->doc->addElement(new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"'));
-                return $this->doc;
+                $element = new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
+                return $element;
             }
             else
             {
@@ -109,26 +109,27 @@ public function getAuthorByEmail(string $email) : array|false
                 $response[SYSERR] = "password klopt niet!";
                 require_once SRC.'views/form_element.php';
                 //show form again with inputted values... 
-                $this->doc = $this->createWikiDoc($response);
-                $this->doc->addElement(new FormElement($response,$response['fieldinfo'], $response['postresult']));
-                return $this->doc;
+                //$this->doc = $this->createWikiDoc($response);
+                $element = new FormElement($response,$response['fieldinfo'], $response['postresult']);
+                return $element;
             }
         }
     }
     //==============================================================================    
-    public function handleLogout(array &$response) : array
+    public function handleLogout(array &$response) : TextBlockViewElement
     {
         unset($_SESSION[USERID]);
-        //unset($_SESSION[USERNAME]);
+        unset($_SESSION[USERNAME]);
         //unset($_SESSION[USEREMAIL]);
         //unset($_SESSION[USERROLE]);
         $response['page']= 'home';
         $this->updateResponse($response);
         require_once SRC.'views/text_block_view_element.php';
-        return $response;
+        $element = new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
+        return $element;    
     }
     //==============================================================================    
-    public function handleContact(array &$response)  : HtmlDoc
+    public function handleContact(array &$response)  : TextBlockViewElement
     {
         $contactvorm = [
             'contact_email' => 'via mail naar <b>'.$response['postresult']['email'].'.</b>',
@@ -141,10 +142,10 @@ public function getAuthorByEmail(string $email) : array|false
                           . $contactvorm[$response['postresult']['contact']];
         $response['page']= 'home';
         $this->updateResponse($response);
-        $this->doc = $this->createWikiDoc($response);
+        //$this->doc = $this->createWikiDoc($response);
         require_once SRC.'views/text_block_view_element.php';
-        $this->doc->addElement(new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"'));
-        return $this->doc;
+        $element = new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
+        return $element;
     }
     //============================================================================== 
     public function handleAuthorDetail(array &$response)
@@ -166,10 +167,8 @@ public function getAuthorByEmail(string $email) : array|false
             $response['page'] = 'search';
             //error message toevoegen --> issue met volgorde elementen .. 
             require_once SRC.'views/msg_view_element.php';
-            $this->doc = new ShowMessage($response);
-            //$this->doc = $this->createWikiFormDoc($response);
-            //$this->doc = new FormElement($response['forminfo'],$response['fieldinfo']);
-            return $this->doc; 
+            $element = new ShowMessage($response);
+            return $element;
         }
     }
     //============================================================================== 
