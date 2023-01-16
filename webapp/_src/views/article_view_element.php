@@ -4,20 +4,16 @@ class ArticleView implements iView
 {
    protected array $article;
    
-    public function __construct(array $article, $loggedAuthor, string $wrapper)
+    public function __construct(array $article, string $wrapper)
     {
        $this->article = $article;
        $this->wrapper= $wrapper;
-       $this->loggedauthor = $loggedAuthor;
     }
     public function show() : void
     {
-        if($this->loggedauthor)
+        if($_SESSION['UID'] == $this->article['author_id'])
         {
-            if($_SESSION[USERID] == $this->article['author_id'])
-            {
-                echo '<a href="'.LINKBASE.'editarticle&article_id='.$this->article['id'].'">edit Article</a>';
-            }
+            echo '<a href="'.LINKBASE.'editarticle&article_id='.$this->article['id'].'">edit Article</a>';
         }
         if($this->article['tags'] || $this->article['tags'] == null) 
         {

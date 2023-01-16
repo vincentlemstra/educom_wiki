@@ -136,7 +136,7 @@ class PageController extends MainController implements iController
                     //$this->doc->menuElement = new MenuView($this->getBasemodel()->sitedao->getMenuItems(BaseModel::LoggedAuthor(), $this->response['page']));
                     break;
                 case 'register':
-                    //not finished -> to Do .. 
+                    //not finished not done.. 
                     $this->elements [] = $this->getAuthorModel()->handleRegistration($this->response);
                     break;
                 case 'newarticle':
