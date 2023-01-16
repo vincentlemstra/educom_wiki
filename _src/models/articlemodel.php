@@ -188,10 +188,12 @@ class ArticleModel extends BaseModel implements iArticleModel
             //$article = $response['postresult'];
             tools::dump($response['postresult']);
             $response['postresult']['img'] = null;
+            Tools::dump($article['id']);
             $id = $this->updateArticleById($article['id'], $response['postresult']['title'], $response['postresult']['img'], 
                                             $response['postresult']['explanation'], $response['postresult']['code_block'], 
                                             $response['postresult']['tag']);
         }
+        Tools::dump($id);
         //if succes -> show article with succes message
         if($id)
         {
@@ -331,13 +333,13 @@ class ArticleModel extends BaseModel implements iArticleModel
     public function updateArticleById(int $article_id, string $title, /*string*/ $img, string $explanation, string $code_block, /*array*/ $tags
             ) : int|false
     {
-       return $this->_crud->doUpdate("UPDATE article SET title=:title, img=:img, explanation=:explanation, code_block=:code_block WHERE id=:id",
+       return $this->_crud->doUpdate("UPDATE article SET title=:title, /*img=:img,*/ explanation=:explanation, code_block=:code_block WHERE id=:id",
                                         [
                                             'title' => [$title, false],
                                             'img' => [$img, false],
                                             'explanation' =>[$explanation, false],
                                             'code_block' =>[$title, false],
-                                            'id' => [$article_id, true]
+                                            'id' => [$article_id, false]
                                         ]
                                     );
 
