@@ -18,6 +18,7 @@ Beschrijf kort wat de achterliggende gedachte is van de gebruikte technologieen.
 * Restful API (POST/GET/PUT/DELETE)
 * XML / SVG
 * Design Patterns (MVC, Observer, Dependency Injection)
+jasjdasj
 
 Beschrijf naast de kale opsomming ook je "wapenfeiten" - bijvoorbeeld: "Ik heb een observer pattern toegepast om de workflow van het aanmaken van een gebruiker flexibeler te kunnen implementeren."  
 
