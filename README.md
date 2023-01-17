@@ -1,5 +1,5 @@
 <img src="assets/github/header-logo.png"/>
-
+test
 # EDUCOM WIKI
 
 Geef hier kort het doel aan van de applicatie. Wat was de opdracht? Beschrijf de case in een aantal zinnen. Geef vooral inzicht in wat het bijzondere is aan de applicatie, of waar je het meest trots op bent.  
