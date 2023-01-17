@@ -37,6 +37,7 @@ class Crud implements iSingleton, iCrud
 //==============================================================================
     public function getLastError() : string
     {
+        echo $this->_lasterror;
         return $this->_lasterror;
     }
 //==============================================================================	
@@ -126,6 +127,7 @@ class Crud implements iSingleton, iCrud
 //==============================================================================
     protected function _setLastError(string $error)
     {
+        echo $error;
         $this->_lasterror = $error;
     }
 //==============================================================================
@@ -147,6 +149,7 @@ class Crud implements iSingleton, iCrud
         catch(PDOException $e)
         {
             $this->_setLastError($e->getCode().":".$e->getMessage());// toevoegen logger !! 
+            
             return false;
         }
     }		

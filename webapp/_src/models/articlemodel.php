@@ -17,6 +17,7 @@ class ArticleModel extends BaseModel implements iArticleModel
     public function handleArticleDetail(&$response) 
     {
         $id = Tools::getRequestVar('article_id', false, 0, true);
+        Tools::dump($response);
         if($id === 0)
         {
             $response[SYSERR] = 'Ongeldige Blog';
@@ -50,7 +51,7 @@ class ArticleModel extends BaseModel implements iArticleModel
             $article['rating'] = 5;
             $response['article'] = $article;
             require_once SRC.'views/article_view_element.php';
-            $element = new ArticleView($article , 'div class="article-grid"');
+            $element = new ArticleView($article, $this->loggedAuthor(), 'div class="article-grid"');
             return $element;
         }
     }
@@ -86,7 +87,7 @@ class ArticleModel extends BaseModel implements iArticleModel
             $article = $this->getArticleById($id);
             $article['tags'] = $this->getTagsByArticleId($id);
             $article['rating'] = 'n/a'; // TO DO RATING !!
-            $element = new ArticleView($article, 'div class="article-grid"');
+            $element = new ArticleView($article, $this->loggedAuthor(), 'div class="article-grid"');
             
             //OK-> Save and Show article and give succes message.
             return $element;
@@ -185,8 +186,6 @@ class ArticleModel extends BaseModel implements iArticleModel
         else
         {
         //if ok, save the article -->update query of current article ID. 
-            //$article = $response['postresult'];
-            tools::dump($response['postresult']);
             $response['postresult']['img'] = null;
             $id = $this->updateArticleById($article['id'], $response['postresult']['title'], $response['postresult']['img'], 
                                             $response['postresult']['explanation'], $response['postresult']['code_block'], 
@@ -201,7 +200,7 @@ class ArticleModel extends BaseModel implements iArticleModel
             $article = $this->getArticleById($article['id']);
             $article['tags'] = $this->getTagsByArticleId($article['id']);
             $article['rating'] = 'n/a'; // TO DO RATING !!
-            $element = new ArticleView($article, 'div class="article-grid"');
+            $element = new ArticleView($article, $this->loggedauthor(), 'div class="article-grid"');
             
             //OK-> Save and Show article and give succes message.
             return $element;
@@ -209,7 +208,7 @@ class ArticleModel extends BaseModel implements iArticleModel
         //no succes -> add error msg and show author page.
         else
         {
-            $response[SYSERR] = 'Article not saved, error occurred during saving..';
+            $response[SYSERR] = 'Article not saved, error occurred during saving..did you adjust anything at all?';
             $response['page'] = 'home';
             require_once SRC.'views/text_block_view_element.php';
             $element = new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
@@ -326,26 +325,20 @@ class ArticleModel extends BaseModel implements iArticleModel
 
     // ==============================================================================================
     // updateArticleById
-    // out: lastInsertId()
+    // out: numberofrecords()
     // ==============================================================================================
-    public function updateArticleById(int $article_id, string $title, /*string*/ $img, string $explanation, string $code_block, /*array*/ $tags
-            ) : int|false
+    public function updateArticleById(int $article_id, string $title, /*string*/ $img, string $explanation, string $code_block, /*array*/ $tags) : int|false
     {
-       return $this->_crud->doUpdate("UPDATE article SET title =:title, img=:img, explanation=:explanation, code_block=:code_block WHERE id =:id",
+        return $this->_crud->doUpdate("UPDATE article SET title=:title, img=:img, explanation=:explanation, code_block=:code_block WHERE id=:id",
                                         [
                                             'title' => [$title, false],
                                             'img' => [$img, false],
                                             'explanation' =>[$explanation, false],
-                                            'code_block' =>[$title, false],
+                                            'code_block' =>[$code_block, false],
                                             'id' => [$article_id, true]
                                         ]
                                     );
-
-
-        //$this->deleteArticleTags($article_id);
-        //$this->setArticleTags($article_id, $tags);
-
-        //return $article_id;
+        //to do adjust article tags
     }
 
     // ==============================================================================================
