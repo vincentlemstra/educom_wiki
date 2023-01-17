@@ -1,6 +1,6 @@
 <?php
 define('TITLE',         'Wiki'); 
-define('AUTHOR',        'Koen');
+define('AUTHOR',        'Vincent');
 define('NOP',           'NOP');
 define('USERID',        'UID');
 define('USEREMAIL',     'UEMAIL');
@@ -17,8 +17,8 @@ define('SHOPIMG_FOLDER','.\assets\shop\\');
 define('WEBIMG_FOLDER', '.\assets\img\\');
 
 define("PDOHOST",		"127.0.0.1");
-define('PDODATABASE',   'wiki');
+define('PDODATABASE',   'educom_wiki');
 define('PDOUSER',       'root');
 define('PDOPASS',       '56787F62767E');
-define('PDOPASSUNSAFE',  'bonsai');
+define('PDOPASSUNSAFE',  'WAMPsetup0191');
 define('PDODRIVER',     'mysql');
