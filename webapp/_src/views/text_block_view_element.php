@@ -1,17 +1,18 @@
 <?php
-require_once SRC.'interfaces/i_Html_Element.php';
-class TextBlockViewElement implements iView
+require_once SRC.'views/BasePageElement.php';
+class TextBlockViewElement extends BasePageElement
 {
    protected string $text_block;
    
-    public function __construct(string $text_block, string $wrapper)
+    public function __construct(int $order, string $text_block, string $wrapper)
     {
-       $this->text_block= $text_block;
-       $this->wrapper= $wrapper;
+       parent::__construct($order);
+       $this->text_block = $text_block;
+       $this->wrapper    = $wrapper;
     }
 
-    public function show() : void
+    public function _displayContent() : string
     {
-        echo '<'.$this->wrapper.'>'.$this->text_block.'</'.$this->wrapper.'>';
+        return '<'.$this->wrapper.'>'.$this->text_block.'</'.$this->wrapper.'>';
     }
 }

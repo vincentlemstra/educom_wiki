@@ -1,28 +1,32 @@
 <?php
-require_once SRC.'interfaces/i_html_element.php';
-Abstract class BaseList implements iView 
+require_once SRC.'views/BasePageElement.php';
+Abstract class BaseList extends BasePageElement
 {
 protected array $items; //protected--> kan overschreven worden door extends
 
-	public function __construct(array $items , $page='')
+	public function __construct(int $order, array $items , $page='')
 	{
+		parent::__construct($order);
 		$this->items = $items;
 		$this->page = $page;
 	}
 
-	final public function show() : void //in extend niet overschrijfbaar
+	final public function _displayContent() : string //in extend niet overschrijfbaar
 	{
-		$this->openList();
-		$this->showItems();
-		$this->closeList();
+		$ret  = $this->openList();
+		$ret .= $this->showItems();
+		$ret .= $this->closeList();
+		return $ret;
 	}
 	
 	protected function showItems()
 	{
+		$ret = '';
 		foreach($this->items as $item)
 		{
-			$this->showItem($item, $this->page);
+			$ret .= $this->showItem($item, $this->page);
 		}
+		return $ret;
 	}
 	abstract function openList();
 	abstract function closeList();

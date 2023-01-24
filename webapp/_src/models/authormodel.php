@@ -1,6 +1,5 @@
 <?php
 require_once "BaseModel.php";
-
 class AuthorModel extends BaseModel
 {
 //===================================================================
@@ -86,7 +85,7 @@ public function getAuthorByEmail(string $email) : array|false
                 //show form again with inputted values... 
                 //$this->doc = $this->createWikiDoc($response);
                 $response[SYSERR] = "Het Email adres is onbekend!";
-                $element = new FormElement($response,$response['fieldinfo'], $response['postresult']);
+                $element = new FormElement(20, $response,$response['fieldinfo'], $response['postresult']);
                 return $element;
         }
         else
@@ -100,7 +99,7 @@ public function getAuthorByEmail(string $email) : array|false
                 $response['page']= 'home';
                 //$this->doc = $this->createWikiDoc($response);
                 require_once SRC.'views/text_block_view_element.php';
-                $element = new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
+                $element = new TextBlockViewElement(20, $this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
                 return $element;
             }
             else
@@ -110,7 +109,7 @@ public function getAuthorByEmail(string $email) : array|false
                 require_once SRC.'views/form_element.php';
                 //show form again with inputted values... 
                 //$this->doc = $this->createWikiDoc($response);
-                $element = new FormElement($response,$response['fieldinfo'], $response['postresult']);
+                $element = new FormElement(20, $response,$response['fieldinfo'], $response['postresult']);
                 return $element;
             }
         }
@@ -125,7 +124,7 @@ public function getAuthorByEmail(string $email) : array|false
         $response['page']= 'home';
         $this->updateResponse($response);
         require_once SRC.'views/text_block_view_element.php';
-        $element = new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
+        $element = new TextBlockViewElement(20, $this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
         return $element;    
     }
     //==============================================================================    
@@ -144,7 +143,7 @@ public function getAuthorByEmail(string $email) : array|false
         $this->updateResponse($response);
         //$this->doc = $this->createWikiDoc($response);
         require_once SRC.'views/text_block_view_element.php';
-        $element = new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
+        $element = new TextBlockViewElement(20, $this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
         return $element;
     }
     //============================================================================== 
@@ -153,12 +152,11 @@ public function getAuthorByEmail(string $email) : array|false
         //check if author ID exists in database
         $id = Tools::getRequestVar('id', false, 0, true);
         $author = $this->getAuthorById($id);
-        $articles = $this->getArticleNamesByAuthorId($id);
         if($author)
         {
             //return author element
             require_once SRC.'views/author_view_element.php';
-            return new AuthorPageView($author, $articles);
+            return new AuthorPageView(20,$author);
         }
         else 
         {
@@ -171,6 +169,25 @@ public function getAuthorByEmail(string $email) : array|false
             return $element;
         }
     }
+    //==============================================================================
+    public function handleAuthorArticles (array &$response)
+    {
+        $id = Tools::getRequestVar('id', false, 0, true);
+        $articles = $this->getArticleNamesByAuthorId($id);
+        if($articles)
+        {
+            return new ArticleListAuthor(25,$articles);
+        }
+        else 
+        {
+            $response[SYSERR] = 'Auteur niet gevonden.. Heb je wel op een Auteur geklikt?';
+            $response['page'] = 'search';
+            require_once SRC.'views/msg_view_element.php';
+            $element = new ShowMessage(15,$response);
+            return $element;
+        }
+    }
+    
     //============================================================================== 
     public function getArticleNamesByAuthorId(int $author_id) : array|false
     {        

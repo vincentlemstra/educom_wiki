@@ -11,7 +11,7 @@ class PageController extends MainController implements iController
     protected ?BaseModel $basemodel = null;
     protected ?AuthorModel $authormodel = null;
     protected ?ArticleModel $articlemodel = null;
-    protected ?HtmlDoc $doc = null;
+    protected ?iHtmlDoc $doc = null;
 
 //==============================================================================
 // Implementation of iController interface
@@ -30,7 +30,7 @@ class PageController extends MainController implements iController
         catch(Exception $e) 
         {
             ob_end_clean();
-            //add log ? 
+            // add log ? 
             // add custom error message?
             echo $e->getMessage(); 
         }
@@ -58,12 +58,15 @@ class PageController extends MainController implements iController
         }
         else
         {
+            
+            // change methods of page creation here :
+
             $this->doc = $this->getBasemodel()->createWikiDoc($this->response);
             require_once SRC.'views/text_block_view_element.php';
-            $this->doc->addElement(new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"'));
+            $this->doc->addElement(20, new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"'));
             //add footer --> perhaps also in function? 
             require_once SRC.'views/footer_element.php';
-            $this->doc->addElement(new FooterElement('&copy; '.date("Y").'&nbsp;', 'footer'));
+            $this->doc->addElement(20, new FooterElement('&copy; '.date("Y").'&nbsp;', 'footer'));
         }
     }
 //==============================================================================
@@ -76,7 +79,7 @@ class PageController extends MainController implements iController
         foreach($this->elements as $element)
         {
             //for each elements add elements to htmlDoc
-           $this->doc->addElement($element);
+           $this->doc->addBodyElement($element);
         }
 
         //add standard elements to html document -> footer, JS, CSS
@@ -84,9 +87,10 @@ class PageController extends MainController implements iController
         {
             //standard elements
             require_once SRC.'views/footer_element.php';
-            $this->doc->addElement(new FooterElement('&copy; '.date("Y").'&nbsp;', 'footer'));
+            $this->doc->addBodyElement(new FooterElement(100, '&copy; '.date("Y").'&nbsp;', 'footer'));
             //CSS
-            $this->doc->addCssFile('./assets/css/style.css');
+            require_once SRC.'views/element.php';
+            $this->doc->addHeadElement(new Element(0,'<link rel="stylesheet" href="./assets/css/style.css"/>'));
             //JavaScript
             //$this->doc->addJsFile('./assets/js/rate.js', false);
             $this->doc->show();
@@ -153,7 +157,7 @@ class PageController extends MainController implements iController
         else
         {
             require_once SRC.'views/form_element.php';
-            $this->elements [] = new FormElement($this->response,$this->response['fieldinfo'], $this->response['postresult']);
+            $this->elements [] = new FormElement(20, $this->response,$this->response['fieldinfo'], $this->response['postresult']);
         }
     }
 //==============================================================================
@@ -163,13 +167,13 @@ class PageController extends MainController implements iController
         {
             case 'home':
                 require_once SRC.'views/text_block_view_element.php';
-                $this->elements [] = new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"');
+                $this->elements [] = new TextBlockViewElement(20, $this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"');
                 break;
             case 'about':
                 require_once SRC.'views/text_block_view_element.php';
                 require_once SRC.'views/authorlist_view_element.php';
-                $this->elements [] = new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"');
-                $this->elements [] = new AuthorListView($this->getAuthorModel()->getAllAuthors());
+                $this->elements [] = new TextBlockViewElement(20, $this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"');
+                $this->elements [] = new AuthorListView(20, $this->getAuthorModel()->getAllAuthors());
                 break;
             case 'contact':
             case 'login':
@@ -179,7 +183,7 @@ class PageController extends MainController implements iController
                 //To do : create 1 line, let de model start the createwikiformdoc if checks are ok.. else add other elements (tekstblock and error message)
                 $this->response = $this->getBaseModel()->createWikiFormDoc($this->response);
                 require_once SRC.'views/form_element.php';
-                $this->elements [] = new FormElement($this->response['forminfo'],$this->response['fieldinfo']);
+                $this->elements [] = new FormElement(20, $this->response['forminfo'],$this->response['fieldinfo']);
                 break;
             case 'article':
                 $this->elements [] = $this->getArticleModel()->handleArticleDetail($this->response);
@@ -191,6 +195,8 @@ class PageController extends MainController implements iController
             case 'author':
                 require_once SRC.'views/article_view_element.php';
                 $this->elements [] = $this->getAuthorModel()->handleAuthorDetail($this->response);
+                //how to get articles from authors here? 
+                $this->elements [] = $this->getAuthorModel()->handleAuthorArticles($this->response);
                 break; 
             case 'logout':
                 //$this->response = $this->getAuthorModel()->handleLogout($this->response);

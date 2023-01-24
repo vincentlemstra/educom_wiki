@@ -1,59 +1,60 @@
 <?php
-//=============================================================================
+///=============================================================================
 // FILE : form_element.php - form-element extending the base element :
 //=============================================================================
-require_once SRC.'classes/baselist.class.php';
+require_once CLASSPATH.'baselist.class.php';
 class FormElement extends BaseList
 {
 	protected array $forminfo;
 	protected array $postresult;
 
-	public function __construct(array $forminfo, array $fieldinfo, ?array $postresult=[])
+	public function __construct(int $order, array $forminfo, array $fieldinfo, ?array $postresult=[])
 	{
         $this->forminfo 	= $forminfo;
         $this->fieldinfo    = $fieldinfo;
 		$this->postresult 	= $postresult;
-        parent::__construct($this->forminfo);
+        parent::__construct($order, $this->forminfo);
 	}
 //==============================================================================	
 	public function openList()
 	{
-		//Tools::dump($this->forminfo);
         $page = $this->getValueFromArray('page', $this->forminfo, 'NOTSET');
         $action = $this->getValueFromArray('action', $this->forminfo, '');
         $method = $this->getValueFromArray('method', $this->forminfo, 'POST');
-        echo '<form action="'.$action.'" method="'.$method.'" enctype="multipart/form-data" >
+        return '<form action="'.$action.'" method="'.$method.'" enctype="multipart/form-data" >
               <input type="hidden" name="page" value="'.$page.'" />';
 	}
 //==============================================================================
 	public function showItems()
 	{
+        $ret = null;
         foreach ($this->fieldinfo as $name => $info)
         {
             $current_value = $this->getFieldValue($name, $info);
-            echo '<label for="'.$name.'">'.$info['label'].'</label>';
+            $ret .= '<label for="'.$name.'">'.$info['label'].'</label>';
 
             switch ($info['type'])
             {
                 case "textarea" :
-                    $this->showTextArea($name, $info,$current_value);
+                    $ret.= $this->showTextArea($name, $info,$current_value);
                     break;
                 case "select" :
-                    $this->showSelect($name, $info,$current_value);
+                    $ret .= $this->showSelect($name, $info,$current_value);
                     break;
                 case "select multiple" :
-                    $this->showSelectmultiple($name, $info,$current_value);
+                    $ret .= $this->showSelectmultiple($name, $info,$current_value);
                     break;
                 default :   
-                    $this->showInputField($name, $info, $current_value);
+                    $ret .= $this->showInputField($name, $info, $current_value);
                     break;
             }
-            echo ''.PHP_EOL;
+            $ret .= '';
             if (isset($this->postresult[$name.'_err']))
             {
-                    echo '<span class="error">* '.$this->postresult[$name.'_err'].'</span><br/>';
+                    $ret .=  '<span class="error">* '.$this->postresult[$name.'_err'].'</span><br/>';
             }           
         }
+        return $ret;
 	}
 //==============================================================================
     protected function getFieldValue(string $name, array $info) : string   
@@ -71,48 +72,50 @@ class FormElement extends BaseList
 	public function closeList()
 	{
 		$submit = $this->getValueFromArray('submit', $this->forminfo, 'Submit');
-        echo '  <button type="submit" value="submit">'.$submit.'</button></form>';
+        return '  <button type="submit" value="submit">'.$submit.'</button></form>';
 	}	
 //==============================================================================
     protected function showTextArea(string $fieldname, array $fieldinfo, string $current_value)
     {
-        echo '	<textarea name="'.$fieldname.'" 
+        return '<textarea name="'.$fieldname.'" 
         		placeholder="'.$fieldinfo['placeholder'].'">'.$current_value.'</textarea>';    
     }
 //==============================================================================
     protected function showSelect($fieldname, $fieldinfo, $current_value)
     {        
-        echo '      <select name="'.$fieldname.'">'.PHP_EOL;
+        $ret = '      <select name="'.$fieldname.'">'.PHP_EOL;
         $options = $this->getValueFromArray('options',$fieldinfo,[]);
         if ($options)
         {
             foreach ($options as $key => $value)
             {
                 $selected = $current_value==$value ? "selected" : "";
-                echo '<option value="'.$value.'" '.$selected.'>'.$key.'</option>'.PHP_EOL;
+                $ret .= '<option value="'.$value.'" '.$selected.'>'.$key.'</option>'.PHP_EOL;
             }    
         }
-        echo '      </select>'.PHP_EOL;
+        $ret .= '      </select>'.PHP_EOL;
+        return $ret;
     }
 //==============================================================================
     protected function showSelectMultiple($fieldname, $fieldinfo, $current_value)
     {        
-        echo '      <select name="'.$fieldname.' "multiple>'.PHP_EOL;
+        $ret = '      <select name="'.$fieldname.' "multiple>'.PHP_EOL;
         $options = $this->getValueFromArray('options',$fieldinfo,[]);
         if ($options)
         {
             foreach ($options as $key => $value)
             {
                 $selected = $current_value==$value ? "selected" : "";
-                echo '<option value="'.$value.'" '.$selected.'>'.$key.'</option>'.PHP_EOL;
+                $ret .= '<option value="'.$value.'" '.$selected.'>'.$key.'</option>'.PHP_EOL;
             }    
         }
-        echo '      </select>'.PHP_EOL;
+        $ret .= '      </select>'.PHP_EOL;
+        return $ret;
     }
 //==============================================================================
     protected function showInputField(string $fieldname, array $fieldinfo, string $current_value)
     {
-        echo ' <input type="'.$fieldinfo['type'].'"name="'.$fieldname.'"'. 
+        return ' <input type="'.$fieldinfo['type'].'"name="'.$fieldname.'"'. 
              ' placeholder="'.$fieldinfo['placeholder'].'"value="'.$current_value.'"/>';
     }        
 //==============================================================================

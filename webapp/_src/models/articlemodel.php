@@ -17,7 +17,6 @@ class ArticleModel extends BaseModel implements iArticleModel
     public function handleArticleDetail(&$response) 
     {
         $id = Tools::getRequestVar('article_id', false, 0, true);
-        Tools::dump($response);
         if($id === 0)
         {
             $response[SYSERR] = 'Ongeldige Blog';
@@ -51,7 +50,7 @@ class ArticleModel extends BaseModel implements iArticleModel
             $article['rating'] = 5;
             $response['article'] = $article;
             require_once SRC.'views/article_view_element.php';
-            $element = new ArticleView($article, $this->loggedAuthor(), 'div class="article-grid"');
+            $element = new ArticleView(20, $article, $this->loggedAuthor(), 'div class="article-grid"');
             return $element;
         }
     }
@@ -87,7 +86,7 @@ class ArticleModel extends BaseModel implements iArticleModel
             $article = $this->getArticleById($id);
             $article['tags'] = $this->getTagsByArticleId($id);
             $article['rating'] = 'n/a'; // TO DO RATING !!
-            $element = new ArticleView($article, $this->loggedAuthor(), 'div class="article-grid"');
+            $element = new ArticleView(20, $article, $this->loggedAuthor(), 'div class="article-grid"');
             
             //OK-> Save and Show article and give succes message.
             return $element;
@@ -137,7 +136,7 @@ class ArticleModel extends BaseModel implements iArticleModel
             $article['tags'] = $this->getTagsByArticleId($article['id']);
             $article['rating'] = 'n/a'; // TO DO RATING !!
             $response['postresult'] = $article;
-            $element = new FormElement($response['forminfo'],$response['fieldinfo'], $response['postresult']);
+            $element = new FormElement(20, $response['forminfo'],$response['fieldinfo'], $response['postresult']);
             return $element;
         }
         else 
@@ -145,8 +144,8 @@ class ArticleModel extends BaseModel implements iArticleModel
             // add error message and go to homepage
             $response[SYSERR] = 'Sorry, je mag dit blog niet aanpassen. Je kan alleen je eigen blogs aanpassen.';
             require_once SRC.'views/msg_view_element.php';
-            $element = new ShowMessage($response);
-            return $element;         
+            $element = new ShowMessage(15, $response);
+            return $element;   
         }
        
     }
@@ -169,7 +168,7 @@ class ArticleModel extends BaseModel implements iArticleModel
              $response[SYSERR] = 'Blog niet gevonden';
              $response['page'] = 'search';
              require_once SRC.'views/msg_view_element.php';
-             $elements [] = new ShowMessage($response);
+             $elements [] = new ShowMessage(15, $response);
          //add element search ? 
              return $elements;
          }
@@ -179,7 +178,7 @@ class ArticleModel extends BaseModel implements iArticleModel
             $response[SYSERR] = 'Blog niet gevonden';
             $response['page'] = 'search';
             require_once SRC.'views/msg_view_element.php';
-            $elements [] = new ShowMessage($response);
+            $elements [] = new ShowMessage(15, $response);
             return $elements;
        
         }
@@ -200,7 +199,7 @@ class ArticleModel extends BaseModel implements iArticleModel
             $article = $this->getArticleById($article['id']);
             $article['tags'] = $this->getTagsByArticleId($article['id']);
             $article['rating'] = 'n/a'; // TO DO RATING !!
-            $element = new ArticleView($article, $this->loggedauthor(), 'div class="article-grid"');
+            $element = new ArticleView(20, $article, $this->loggedauthor(), 'div class="article-grid"');
             
             //OK-> Save and Show article and give succes message.
             return $element;
@@ -211,7 +210,7 @@ class ArticleModel extends BaseModel implements iArticleModel
             $response[SYSERR] = 'Article not saved, error occurred during saving..did you adjust anything at all?';
             $response['page'] = 'home';
             require_once SRC.'views/text_block_view_element.php';
-            $element = new TextBlockViewElement($this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
+            $element = new TextBlockViewElement(20, $this->sitedao->getTextByPage($response['page']),'div class="wrapper"');
             return $element;
 
         }

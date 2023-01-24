@@ -38,16 +38,16 @@ public static function loggedAuthor() : bool
     }    
 
     //==============================================================================
-    public function createWikiDoc(&$response) : HtmlDoc
+    public function createWikiDoc(&$response) : BasePage
     {
         $this->updateResponse($response);
-        require_once SRC.'views/html_doc.php';
+        require_once SRC.'views/BasePage.php';
         require_once SRC.'views/menu_element.php';
         require_once SRC.'views/msg_view_element.php';
-        $this->doc = new HtmlDoc;
-        $this->doc->setTitle('Wiki page');
-        $this->doc->addElement(new MenuView($this->sitedao->getMenuItems($this->loggedAuthor()), $response['page']));
-        $this->doc->addElement(new ShowMessage($response));
+        //add variable for page title.. 
+        $this->doc = new BasePage('wikipage');
+        $this->doc->addBodyElement(new MenuView(10, $this->sitedao->getMenuItems($this->loggedAuthor()), $response['page']));
+        $this->doc->addBodyElement(new ShowMessage(20, $response));
         return $this->doc;
     }    
     //==============================================================================

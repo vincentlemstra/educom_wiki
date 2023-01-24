@@ -1,6 +1,7 @@
 <?php
 define('TITLE',         'Wiki'); 
 define('AUTHOR',        'Koen');
+define('AUTHOR_URL','www.koen.nl');
 define('NOP',           'NOP');
 define('USERID',        'UID');
 define('USEREMAIL',     'UEMAIL');

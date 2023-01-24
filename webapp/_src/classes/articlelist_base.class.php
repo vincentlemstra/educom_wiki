@@ -5,26 +5,27 @@ class ArticleListAuthor extends Baselist
 {
     public function openList()
     {
-        echo '<DIV><UL>';
+        return '<DIV><UL>';
     }
 
     public function showItems()
     {
-       
+       $ret ='';
         foreach($this->items as $item)
 		{
-            $this->showItem($item);
+            $ret .= $this->showItem($item);
 		}
+        return $ret;
     }
 
     public function closeList()
     {
-        echo "</UL></DIV>";
+        return "</UL></DIV>";
     }
     
     protected function showItem(array $item)
 	{
-		echo '<LI><a href="index.php?page=article&article_id='.$item['id'].'">'.$item['title'].'</a>
+		return '<LI><a href="index.php?page=article&article_id='.$item['id'].'">'.$item['title'].'</a>
 				</LI>';
 	}
 }

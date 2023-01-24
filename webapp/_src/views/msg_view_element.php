@@ -1,26 +1,36 @@
 <?php
-Require_once SRC.'interfaces/i_Html_element.php';
-class ShowMessage implements iView
+require_once 'BasePageElement.php';
+class ShowMessage extends BasePageElement /*implements iView*/
 {
-    //protected SYSMSG;
-    //protected SYSERR;
-    public function __construct ($response)
+    public function __construct (int $order, array $response, bool $add_wrapper = true)
     {
+        parent::__construct($order, $add_wrapper);
         $this->response = $response;
     }
 
-    public function show() : void
+    public function _displayContent() : string
     {
-        
+        $ret = '';
         foreach ([SYSERR,SYSMSG] as $key)
         {  
             $msg = Tools::getValueFromArray($key, $this->response,'');
             if ($msg)
             {
-                echo '<div class="'.$key.'">'.PHP_EOL
+               if(empty($ret))
+               {
+               $ret = '<div class="'.$key.'">'.PHP_EOL
                     .$msg.PHP_EOL
                     .'</div>'.PHP_EOL;
-            }    
-        }    
+                }
+                else 
+                {
+                     $ret .= '<div class="'.$key.'">'.PHP_EOL
+                    .$msg.PHP_EOL
+                    .'</div>'.PHP_EOL;
+                }
+            }
+           
+        }
+        return $ret;     
     }
 }
