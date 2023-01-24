@@ -20,13 +20,10 @@ class AuthorPageView extends BasePageElement implements iPageElement
 
 	// author Text --> to be added from DB
     $ret .= '<div class="bodycontent"> Here is is some dummy data about this great Developer :-) </div>';
-	if($_SESSION['UNAME'] == $this->author['firstname'])
+	if( USERNAME == $this->author['firstname'])
 	{
 		$ret .= '<a href="'.LINKBASE.'newarticle"> create new article</a>';
 	}
 	return $ret;
     }
-
-	
-
 }

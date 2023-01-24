@@ -58,15 +58,11 @@ class PageController extends MainController implements iController
         }
         else
         {
-            
-            // change methods of page creation here :
-
             $this->doc = $this->getBasemodel()->createWikiDoc($this->response);
             require_once SRC.'views/text_block_view_element.php';
-            $this->doc->addElement(20, new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"'));
-            //add footer --> perhaps also in function? 
             require_once SRC.'views/footer_element.php';
-            $this->doc->addElement(20, new FooterElement('&copy; '.date("Y").'&nbsp;', 'footer'));
+            $this->doc->addBodyElement(20, new TextBlockViewElement($this->getBasemodel()->sitedao->getTextByPage($this->response['page']),'div class="wrapper"'));
+            $this->doc->addBodyElement(20, new FooterElement('&copy; '.date("Y").'&nbsp;', 'footer'));
         }
     }
 //==============================================================================
@@ -137,7 +133,6 @@ class PageController extends MainController implements iController
                 case 'login':
                     require_once SRC.'views/form_element.php';
                     $this->elements [] = $this->getAuthorModel()->handleLogin($this->response);
-                    //$this->doc->menuElement = new MenuView($this->getBasemodel()->sitedao->getMenuItems(BaseModel::LoggedAuthor(), $this->response['page']));
                     break;
                 case 'register':
                     //not finished -> to Do .. 
@@ -195,11 +190,9 @@ class PageController extends MainController implements iController
             case 'author':
                 require_once SRC.'views/article_view_element.php';
                 $this->elements [] = $this->getAuthorModel()->handleAuthorDetail($this->response);
-                //how to get articles from authors here? 
                 $this->elements [] = $this->getAuthorModel()->handleAuthorArticles($this->response);
                 break; 
             case 'logout':
-                //$this->response = $this->getAuthorModel()->handleLogout($this->response);
                 $this->elements [] = $this->getAuthorModel()->handleLogout($this->response);
                 break;
         }
